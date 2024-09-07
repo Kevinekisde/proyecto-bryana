@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Solicitudes OC",
+        "url": "/requests"
+    },
+    {
+        "name": "Solicitud Cotizar",
+        "url": "/quote-request"
+    }
+]
