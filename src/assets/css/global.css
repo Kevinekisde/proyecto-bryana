@@ -32,8 +32,8 @@ body {
 
 .bg-signIn {
     background: #1135A6;
-    background: -webkit-radial-gradient(111.57% 86.19% at 68.67% 100%, #1135A6 0%, #7689c6 100%);
-    background: radial-gradient(111.57% 86.19% at 68.67% 100%, #1135A6 0%, #7788c0 100%);
+    background: -webkit-radial-gradient(111.57% 86.19% at 68.67% 100%, #1135A6 0%, #1d49d9 100%);
+    background: radial-gradient(111.57% 86.19% at 68.67% 100%, #1135A6 0%, #214ddf 100%);
 }
 
 header {

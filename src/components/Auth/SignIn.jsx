@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Logo from '../../assets/Logo.png'
-import PuertoFeo from '../../assets/PUERTO-DE-COQUIMBO.png'
+import LogoBlanco from '../../assets/LogoBlanco.png'
+
 import { Button, Form, Input } from 'antd'
 
 function SignIn() {
@@ -10,10 +11,10 @@ function SignIn() {
     return (
         <div className='w-full'>
             <div className='grid grid-cols-2 bg-white'>
-                <div className='hidden md:flex justify-center items-center min-h-screen '>
+                <div className='hidden md:flex justify-center items-center min-h-screen bg-signIn'>
                     <div className='px-2 md:px-10 lg:px-28'>
-                        <img src={Logo} alt='Logo' width={260} className='mb-6' />
-                        <p className='text-simple text-white text-xl pe-20'>
+                        <img src={LogoBlanco} alt='Logo' width={260} className='mb-6' />
+                        <p className='text-simple !text-white text-xl pe-20'>
                             Bienvenido al portal de adquisiciones de TPC
                         </p>
                     </div>
