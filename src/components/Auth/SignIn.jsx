@@ -3,10 +3,17 @@ import Logo from '../../assets/Logo.png'
 import LogoBlanco from '../../assets/LogoBlanco.png'
 
 import { Button, Form, Input } from 'antd'
+import { navigate } from 'gatsby'
 
 function SignIn() {
 
     const [loading, setLoading] = useState(false)
+
+    const onFinish = (values) => {
+        setLoading(true)
+        navigate('/dashboard')
+        setLoading(false)
+    }
 
     return (
         <div className='w-full'>
@@ -31,7 +38,7 @@ function SignIn() {
                             Iniciar sesión:
                         </p>
                     </div>
-                    <Form name='signIn' autoComplete='off' className='form-expand w-full sm:w-4/5 lg:w-3/5'>
+                    <Form onFinish={ onFinish }  name='signIn' autoComplete='off' className='form-expand w-full sm:w-4/5 lg:w-3/5'>
                         <Form.Item
                             name='username'
                             rules={[{ required: true, message: 'Por favor ingrese su correo electrónico' }]}
