@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Logo from '../../assets/Logo.png'
 import Menu from '../../data/Menu.json'
 import { Link } from 'gatsby'
-import { Avatar, Button, Drawer } from 'antd'
+import { Avatar, Button, Drawer, Popover } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { PiList, PiNewspaper, PiPaperPlane } from 'react-icons/pi'
 
@@ -18,7 +18,7 @@ function Navbar() {
                         <div className='flex items-center gap-2'>
                             <Avatar onClick={() => setOpen(true)} size={42} icon={<UserOutlined />} />
                             <div className='flex flex-col'>
-                                <h1 className="text-[#1135A6] text-lg font-bold">Andrea Cofre</h1>
+                                <h1 className="text-[#1135A6] text-lg font-bold">Andrea</h1>
                                 <p className="text-[#1135A6] text-sm">Administrador</p>
                             </div>
 
@@ -28,13 +28,19 @@ function Navbar() {
                             <div className='flex ms-5 gap-8'>
                                 {
                                     Menu.map((item, index) => (
-                                        <Link
-                                            key={index}
-                                            to={item.url}
-                                            className='text-gray-700 hover:text-gray-900'
-                                        >
-                                            {item.name}
-                                        </Link>
+                                        <Popover placement='bottom' key={index} content={
+                                            <div className='flex flex-col gap-2'>
+                                                {
+                                                    item.items.map((subitem, i) => (
+                                                        <Link key={i} to={subitem.url} className="text-sm text-[#556a89] hover:text-app py-2 px-4 text-center" activeClassName="text-app link-active font-medium">
+                                                            {subitem.name}
+                                                        </Link>
+                                                    ))
+                                                }
+                                            </div>
+                                        }>
+                                            {item.label}
+                                        </Popover>
                                     ))
                                 }
                             </div>
@@ -53,6 +59,10 @@ function Navbar() {
                     <Link to="/usuarios" className="flex flex-col justify-center items-center p-3" activeClassName="text-app link-active font-medium">
                         <PiNewspaper size={24} />
                         <p className="text-xs mt-1">Solicitudes Cotizar</p>
+                    </Link>
+                    <Link to="/solicitud" className="flex flex-col justify-center items-center p-3" activeClassName="text-app link-active font-medium">
+                        <PiNewspaper size={24} />
+                        <p className="text-xs mt-1">Crear solicitud</p>
                     </Link>
                     <div
                         className="flex flex-col justify-center items-center p-3"

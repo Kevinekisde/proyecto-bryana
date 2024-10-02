@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "Recibido",
+        "description": "La OC fue recibida por el area de adquisiciones"
+    },
+    {
+        "id": 2,
+        "name": "Espera liberacion",
+        "description": " La OC esta en espera del liberador financiero y liberador departamento."
+    },
+    {
+        "id": 3,
+        "name": "OC Liberada",
+        "description": "La OC fue liberada por los liberadores"
+    },
+    {
+        "id": 4,
+        "name": "OC Enviada",
+        "description": "La OC fue enviada hacia los proveedores y esta a la espera de la recepción"
+    }
+]

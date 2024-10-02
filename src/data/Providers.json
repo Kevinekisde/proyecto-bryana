@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "rut": "1-9",
+        "company_name": "Proveedor 1",
+        "fantasy_name": "P1",
+        "bien_servicio": "Pescadores",
+        "commune": "Santiago",
+        "contact": "Juan Perez"
+    },
+    {
+        "id": 2,
+        "rut": "2-7",
+        "company_name": "Proveedor 2",
+        "fantasy_name": "P2",
+        "bien_servicio": "Pescadores",
+        "commune": "Santiago",
+        "contact": "Juan Perez"
+    },
+    {
+        "id": 3,
+        "rut": "3-5",
+        "company_name": "Proveedor 3",
+        "fantasy_name": "P3",
+        "bien_servicio": "Pescadores",
+        "commune": "Santiago",
+        "contact": "Juan Perez"
+    },
+    {
+        "id": 4,
+        "rut": "4-3",
+        "company_name": "Proveedor 4",
+        "fantasy_name": "P4",
+        "bien_servicio": "Pescadores",
+        "commune": "Santiago",
+        "contact": "Juan Perez"
+    }
+]

@@ -20,7 +20,7 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                     <label>Tipo de modalidad</label>
                     <div className='flex items-center justify-center'>
                         <Form.Item name="modalidad" rules={[{ required: true, message: 'Por favor seleccione una modalidad' }]} className=' w-2/2 mb-0 flex gap-3'>
-                            <Radio.Group onChange={handleModalidad}>
+                            <Radio.Group defaultValue={2} onChange={handleModalidad}>
                                 <Space direction="horizontal">
                                     <Radio value={1}>Con solped</Radio>
                                     <Radio value={2}>Sin Solped</Radio>

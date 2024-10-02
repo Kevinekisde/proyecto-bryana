@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "ticket": "1",
+        "type": "Solicitud con Solped",
+        "status": "OC Enviada",
+        "solped": "1",
+        "oc": "1",
+        "fecha": "2021-01-01",
+        "provider": "Sodimac"
+    },
+    {
+        "id": 2,
+        "ticket": "2",
+        "type": "Solicitud con Solped",
+        "status": "OC Enviada",
+        "solped": "2",
+        "oc": "2",
+        "fecha": "2021-01-01",
+        "provider": "Sodimac"
+    },
+    {
+        "id": 3,
+        "ticket": "3",
+        "type": "Solicitud con Solped",
+        "status": "OC Liberada",
+        "solped": "3",
+        "oc": "3",
+        "fecha": "2021-01-01",
+        "provider": "Sodimac"
+    },
+    {
+        "id": 4,
+        "type": "Solicitud sin Solped",
+        "ticket": "4",
+        "status": "OC Liberada",
+        "oc": "4",
+        "fecha": "2021-01-04",
+        "provider": "Sodimac",
+        "detalle": "Detalle de Solicitud"
+    }
+]

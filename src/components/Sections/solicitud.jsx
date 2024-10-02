@@ -5,7 +5,6 @@ function Solicitud({ Form, nextStep, tipoSolicitud, setTipoSolicitud }) {
 
 
     const handleSolicitud = ({ target }) => {
-
         const value = target.value
         setTipoSolicitud(value)
     }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Select, DatePicker, Steps } from 'antd'
+import { Form, Input, Button, Select, DatePicker, Steps, Breadcrumb } from 'antd'
 import Modalidad from './modalidad'
 import Solicitud from './solicitud'
 import BackButton from '../Template/Backbutton'
@@ -23,6 +23,19 @@ function Create() {
 
     return (
         <div className="bg-white lg:shadow p-5 lg:p-5 lg:rounded flex flex-col items-center justify-center">
+
+            <Breadcrumb
+                items={[
+                    {
+                        title: <a href="/dashboard">Inicio</a>,
+                    },
+                    {
+                        title: 'Crear solicitud',
+                    },
+                ]}
+
+                className='text-sm mb-4'
+            />
 
             <h1>Nueva solicitud</h1>
 

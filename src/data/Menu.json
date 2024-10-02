@@ -1,10 +1,28 @@
 [
     {
-        "name": "Solicitudes OC",
-        "url": "/requests"
+        "label": "Solicitudes",
+        "items": [
+            {
+                "name": "Crear solicitud",
+                "url": "/solicitud"
+            },
+            {
+                "name": "Solicitudes de cotizacion",
+                "url": "/requests"
+            },
+            {
+                "name": "Solicitudes OC",
+                "url": "/requests-oc"
+            }
+        ]
     },
     {
-        "name": "Solicitud Cotizar",
-        "url": "/quote-request"
+        "label": "Proveedores",
+        "items": [
+            {
+                "name": "Lista de proveedores",
+                "url": "/providers"
+            }
+        ]
     }
 ]
