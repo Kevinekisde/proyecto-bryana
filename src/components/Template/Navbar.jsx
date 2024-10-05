@@ -5,8 +5,13 @@ import { Link } from 'gatsby'
 import { Avatar, Button, Drawer, Popover } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { PiList, PiNewspaper, PiPaperPlane } from 'react-icons/pi'
+import useAuthContext from '../../hooks/useAuthContext'
 
 function Navbar() {
+
+    const { user } = useAuthContext()
+
+    console.log(user)
 
     const [open, setOpen] = useState(false)
 
@@ -18,7 +23,9 @@ function Navbar() {
                         <div className='flex items-center gap-2'>
                             <Avatar onClick={() => setOpen(true)} size={42} icon={<UserOutlined />} />
                             <div className='flex flex-col'>
-                                <h1 className="text-[#1135A6] text-lg font-bold">Andrea</h1>
+                                <h1 className="text-[#1135A6] text-lg font-bold">
+                                    {user.nombre_Usuario}
+                                </h1>
                                 <p className="text-[#1135A6] text-sm">Administrador</p>
                             </div>
 
@@ -96,7 +103,7 @@ function Navbar() {
                         Bienvenido/a
                     </h1>
                     <p className='text-xl font-bold'>
-                        Andrea Cofre
+                        {user.nombre_Usuario}
                     </p>
                 </div>
                 <div className="flex flex-col justify-center my-8 gap-y-4">

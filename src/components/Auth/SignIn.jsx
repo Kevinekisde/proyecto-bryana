@@ -1,17 +1,38 @@
 import React, { useState } from 'react'
 import Logo from '../../assets/Logo.png'
 import LogoBlanco from '../../assets/LogoBlanco.png'
-
-import { Button, Form, Input } from 'antd'
 import { navigate } from 'gatsby'
+import { Button, Form, Input } from 'antd'
+import User from '../../service/User'
+import useAuthContext from '../../hooks/useAuthContext'
 
 function SignIn() {
 
+    const { authIsSuccess } = useAuthContext()
     const [loading, setLoading] = useState(false)
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         setLoading(true)
-        navigate('/dashboard')
+        try {
+            User.auth({
+                correo: values.username,
+                pass: values.password
+            })
+                .then(res => {
+                    localStorage.setItem('correo', res.correo_Usuario)
+                    localStorage.setItem('password', res.contraseña_Usuario)
+                    authIsSuccess(res)
+
+                })
+                .catch(error => {
+                    console.error(error)
+                    setLoading(false)
+                })
+        }
+        catch (error) {
+            console.error(error)
+        }
+
         setLoading(false)
     }
 
@@ -38,7 +59,7 @@ function SignIn() {
                             Iniciar sesión:
                         </p>
                     </div>
-                    <Form onFinish={ onFinish }  name='signIn' autoComplete='off' className='form-expand w-full sm:w-4/5 lg:w-3/5'>
+                    <Form onFinish={onFinish} name='signIn' autoComplete='off' className='form-expand w-full sm:w-4/5 lg:w-3/5'>
                         <Form.Item
                             name='username'
                             rules={[{ required: true, message: 'Por favor ingrese su correo electrónico' }]}
