@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess, alertError } from '../../../utils/alert'
+import Providers from '../../../service/Providers'
 
-const Create = () => {
+const Create = ({ refetch }) => {
 
     const [loading, setLoading] = useState(false)
 
@@ -10,10 +11,29 @@ const Create = () => {
 
     const onFinish = values => {
 
+        const data = {
+            ...values,
+            banco: values.banco ? values.banco : '',
+            swift1: values.swift1 ? values.swift1 : '',
+            swift2: values.swift2 ? values.swift2 : ''
+        }
+
         setLoading(true)
-        setModal(false)
-        setLoading(false)
-        alertSuccess({ message: `Proveedor creado con éxito` })
+        try {
+
+            Providers.post(data)
+                .then((response) => {
+                    setLoading(false)
+                    setModal(false)
+                    alertSuccess({ message: `Proveedor creado con éxito` })
+                    refetch()
+                })
+
+        } catch (e) {
+            console.log(e)
+            setLoading(false)
+            setModal(false)
+        }
     }
 
     return (
@@ -43,7 +63,7 @@ const Create = () => {
 
                     <Form.Item
                         className="mb-2"
-                        name="rut"
+                        name="rut_Proveedor"
                         rules={[{
                             required: true,
                             message: 'Ingrese Rut de Proveedor'
@@ -55,6 +75,21 @@ const Create = () => {
                         />
                     </Form.Item>
 
+                    <Form.Item
+                        className="mb-2"
+                        name="razon_Social"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Ingrese Razon Social'
+                            }
+                        ]}
+                    >
+                        <Input
+                            placeholder="Razon Social"
+                            disabled={loading}
+                        />
+                    </Form.Item>
                     <Form.Item
                         className="mb-2"
                         name="company_name"
@@ -73,7 +108,7 @@ const Create = () => {
 
                     <Form.Item
                         className="mb-2"
-                        name="fantasy_name"
+                        name="nombre_Fantasia"
                         rules={[{
                             required: true,
                             message: 'Ingrese Nombre Fantasía'
@@ -86,8 +121,8 @@ const Create = () => {
                     </Form.Item>
 
                     <Form.Item
-                        className="mb-0"
-                        name="bien_servicio"
+                        className="mb-2"
+                        name="iD_Bien_Servicio"
                         rules={[{
                             required: true,
                             message: 'Ingrese Bien/Servicio'
@@ -99,8 +134,21 @@ const Create = () => {
                         />
                     </Form.Item>
                     <Form.Item
-                        className="mb-0"
-                        name="commune"
+                        className="mb-2"
+                        name="direccion"
+                        rules={[{
+                            required: true,
+                            message: 'Ingrese Direccion'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Direccion"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="comuna"
                         rules={[{
                             required: true,
                             message: 'Ingrese Comuna'
@@ -113,8 +161,21 @@ const Create = () => {
                     </Form.Item>
 
                     <Form.Item
-                        className="mb-0"
-                        name="contact"
+                        className="mb-2"
+                        name="correo_Proveedor"
+                        rules={[{
+                            required: true,
+                            message: 'Ingrese Correo'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Correo"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="telefono_Proveedor"
                         rules={[{
                             required: true,
                             message: 'Ingrese Contacto'
@@ -122,6 +183,97 @@ const Create = () => {
                     >
                         <Input
                             placeholder="Contacto"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="cargo_Representante"
+                        rules={[{
+                            required: true,
+                            message: 'Ingrese Cargo Representante'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Cargo Representante"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="nombre_Representante"
+                        rules={[{
+                            required: true,
+                            message: 'Ingrese Nombre Representante'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Nombre Representante"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="email_Representante"
+                        rules={[{
+                            required: true,
+                            message: 'Ingrese Email Representante'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Email Representante"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="n_Cuenta"
+                        rules={[{
+                            required: true,
+                            message: 'Ingrese Numero de cuenta'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Numero de cuenta"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="banco"
+                        rules={[{
+                            required: false,
+                            message: 'Ingrese Banco'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Banco"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="swift1"
+                        rules={[{
+                            required: false,
+                            message: 'Ingrese Swift'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Swift"
+                            disabled={loading}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="mb-2"
+                        name="swift2"
+                        rules={[{
+                            required: false,
+                            message: 'Ingrese Swift 2'
+                        }]}
+                    >
+                        <Input
+                            placeholder="Swift 2"
                             disabled={loading}
                         />
                     </Form.Item>

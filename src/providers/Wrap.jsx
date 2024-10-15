@@ -1,14 +1,17 @@
 import React from 'react'
 import AntdProvider from './AntDesign'
 import AuthProvider from './Auth'
+import QueryProvider from './ReactQuery'
 
 export const wrapPageElement = ({ element }) => (
-    <>{element}</>
+    <AuthProvider>{element}</AuthProvider>
 )
 
 export const wrapRootElement = ({ element }) => (
     <AntdProvider>
-        {element}
+        <QueryProvider>
+            {element}
+        </QueryProvider>
     </AntdProvider>
 )
 

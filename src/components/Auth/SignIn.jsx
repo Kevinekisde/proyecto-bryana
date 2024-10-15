@@ -13,7 +13,26 @@ function SignIn() {
 
     const onFinish = async (values) => {
         setLoading(true)
-        navigate('/dashboard')
+        try {
+            User.auth({
+                correo: values.username,
+                pass: values.password
+            })
+                .then(res => {
+                    localStorage.setItem('correo', res.correo_Usuario)
+                    localStorage.setItem('password', res.contraseña_Usuario)
+                    authIsSuccess(res)
+
+                })
+                .catch(error => {
+                    console.error(error)
+                    setLoading(false)
+                })
+        }
+        catch (error) {
+            console.error(error)
+        }
+
         setLoading(false)
     }
 

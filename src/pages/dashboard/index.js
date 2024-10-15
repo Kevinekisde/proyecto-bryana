@@ -4,7 +4,6 @@ import Layout from '../../components/Template/Layout'
 function Dashboard() {
   return (
     <Layout>
-
     </Layout>
   )
 }

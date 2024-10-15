@@ -7,25 +7,33 @@ import { FaEye } from 'react-icons/fa'
 import { Link } from 'gatsby'
 import Create from './Create'
 import Update from './Update'
+import useProviders from '../../../hooks/useProviders'
 
 
 function Providers() {
+
+
+    const { data, isLoadign, isSuccess, refetch } = useProviders()
+
     const columns = [
-        { title: 'Rut', dataIndex: 'rut', key: 'rut', align: 'left', responsive: ['md'] },
-        { title: 'Razon social', dataIndex: 'company_name', key: 'company_name', align: 'left', responsive: ['md'] },
-        { title: 'Nombre fantasia', dataIndex: 'fantasy_name', key: 'fantasy_name', align: 'center' },
-        { title: 'Bien/Servicio', dataIndex: 'bien_servicio', key: 'bien_servicio', align: 'center' },
-        { title: 'Commune', dataIndex: 'commune', key: 'commune', align: 'center', responsive: ['md'] },
-        { title: 'Contacto', dataIndex: 'contact', key: 'contact', align: 'center' },
+        { title: 'Rut', dataIndex: 'rut_Proveedor', key: 'rut', align: 'left', responsive: ['md'] },
+        { title: 'Razon social', dataIndex: 'razon_Social', key: 'company_name', align: 'left', responsive: ['md'] },
+        { title: 'Nombre fantasia', dataIndex: 'nombre_Fantasia', key: 'fantasy_name', align: 'center' },
+        { title: 'Bien/Servicio', dataIndex: 'iD_Bien_Servicio', key: 'bien_servicio', align: 'center' },
+        { title: 'Comuna', dataIndex: 'comuna', key: 'commune', align: 'center', responsive: ['md'] },
+        { title: 'Contacto', dataIndex: 'telefono_Proveedor', key: 'contact', align: 'center' },
         {
-            title: 'Editar', key: 'edit', align: 'left', responsive: ['md'], render: (text, record) => <Update id={record.id} />
+            title: 'Editar', key: 'edit', align: 'left', responsive: ['md'], render: (text, record) => <Update proveedor={record} />
         },
         {
-            title: 'Detalle', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Link to={`/providers/${record.id}`} >
+            title: 'Detalle', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Link to={`/providers/${record.iD_Proveedores}`} >
                 <FaEye size={20} />
             </Link>
         },
     ]
+
+    console.log(data)
+
 
 
     return (
@@ -51,12 +59,13 @@ function Providers() {
                     <p className="text-sm text-[#556a89]">Listado de proveedores</p>
                 </div>
                 <div className="flex gap-x-2 order-2">
-                    <Create />
+                    <Create refetch={refetch} />
                 </div>
             </div>
             <Table
+                loading={isLoadign}
                 columns={columns}
-                data={ProvidersData}
+                data={isSuccess ? data : []}
             />
         </div>
     )

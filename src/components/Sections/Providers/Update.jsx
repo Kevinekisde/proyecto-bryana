@@ -4,7 +4,7 @@ import { EditOutlined, LoadingOutlined } from '@ant-design/icons'
 import { alertSuccess, alertError } from '../../../utils/alert'
 import ProvidersData from '../../../data/Providers.json'
 
-const Update = ({ id }) => {
+const Update = ({ proveedor }) => {
 
     const [form] = Form.useForm()
 
@@ -22,22 +22,12 @@ const Update = ({ id }) => {
         alertSuccess({ message: `Usuario actualizado con éxito` })
     }
 
-    const SearchProvider = (id) => {
-        const search = ProvidersData.find(provider => provider.id == id)
-        setProvider(search)
-    }
-
-    useEffect(() => {
-        SearchProvider(id)
-    }, [])
-
-
     useEffect(() => {
         if (modal) {
-            console.log(provider)
-            form.setFieldsValue(provider)
+            console.log(proveedor)
+            form.setFieldsValue(proveedor)
         }
-    }, [modal, provider])
+    }, [modal, proveedor])
 
 
     return (
@@ -67,7 +57,7 @@ const Update = ({ id }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="rut"
+                        name="rut_Proveedor"
                         rules={[{
                             required: true,
                             message: 'Ingrese Rut de Proveedor'
@@ -81,23 +71,7 @@ const Update = ({ id }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="company_name"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Ingrese Nombre de Proveedor'
-                            }
-                        ]}
-                    >
-                        <Input
-                            placeholder="Nombre"
-                            disabled={loading}
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        className="mb-2"
-                        name="fantasy_name"
+                        name="nombre_Fantasia"
                         rules={[{
                             required: true,
                             message: 'Ingrese Nombre Fantasía'
@@ -111,7 +85,7 @@ const Update = ({ id }) => {
 
                     <Form.Item
                         className="mb-0"
-                        name="bien_servicio"
+                        name="iD_Bien_Servicio"
                         rules={[{
                             required: true,
                             message: 'Ingrese Bien/Servicio'
@@ -124,7 +98,7 @@ const Update = ({ id }) => {
                     </Form.Item>
                     <Form.Item
                         className="mb-0"
-                        name="commune"
+                        name="comuna"
                         rules={[{
                             required: true,
                             message: 'Ingrese Comuna'
@@ -138,7 +112,7 @@ const Update = ({ id }) => {
 
                     <Form.Item
                         className="mb-0"
-                        name="contact"
+                        name="telefono_Proveedor"
                         rules={[{
                             required: true,
                             message: 'Ingrese Contacto'

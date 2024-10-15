@@ -58,14 +58,7 @@ const AuthProvider = ({ children }) => {
                 loading ? <div>
                     <h1>Cargando...</h1>
                 </div> : <>
-                    {
-                        !isSignedIn &&
-                        <SignIn></SignIn>
-                    }
-                    {
-                        isSignedIn &&
-                        <Dashboard />
-                    }
+                    {children}
                 </>
             }
         </AuthContext.Provider>
