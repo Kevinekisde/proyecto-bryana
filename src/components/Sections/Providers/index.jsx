@@ -4,6 +4,9 @@ import ProvidersData from '../../../data/Providers.json'
 import { Breadcrumb } from 'antd'
 import { BsEye } from 'react-icons/bs'
 import { FaEye } from 'react-icons/fa'
+import { Link } from 'gatsby'
+import Create from './Create'
+import Update from './Update'
 
 
 function Providers() {
@@ -15,9 +18,12 @@ function Providers() {
         { title: 'Commune', dataIndex: 'commune', key: 'commune', align: 'center', responsive: ['md'] },
         { title: 'Contacto', dataIndex: 'contact', key: 'contact', align: 'center' },
         {
-            title: 'Detalle', key: 'detail', align: 'left', responsive: ['md'], render: () => <a href="/proveedores/detalle">
+            title: 'Editar', key: 'edit', align: 'left', responsive: ['md'], render: (text, record) => <Update id={record.id} />
+        },
+        {
+            title: 'Detalle', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Link to={`/providers/${record.id}`} >
                 <FaEye size={20} />
-            </a>
+            </Link>
         },
     ]
 
@@ -39,6 +45,14 @@ function Providers() {
                 <p className='font-semibold text-lg leading-none'>
                     Proveedores
                 </p>
+            </div>
+            <div className="flex flex-col lg:flex-row items-center gap-2 mb-4">
+                <div className="flex-1 order-1">
+                    <p className="text-sm text-[#556a89]">Listado de proveedores</p>
+                </div>
+                <div className="flex gap-x-2 order-2">
+                    <Create />
+                </div>
             </div>
             <Table
                 columns={columns}

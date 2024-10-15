@@ -7,7 +7,10 @@
         "solped": "1",
         "oc": "1",
         "fecha": "2021-01-01",
-        "provider": "Sodimac"
+        "provider": "Sodimac",
+        "solicitante": "Juan Perez",
+        "orden_estadistica": "1",
+        "razon_social": "Sodimac"
     },
     {
         "id": 2,
@@ -17,7 +20,10 @@
         "solped": "2",
         "oc": "2",
         "fecha": "2021-01-01",
-        "provider": "Sodimac"
+        "provider": "Sodimac",
+        "solicitante": "Juan Perez",
+        "orden_estadistica": "1",
+        "razon_social": "Sodimac"
     },
     {
         "id": 3,
@@ -27,7 +33,10 @@
         "solped": "3",
         "oc": "3",
         "fecha": "2021-01-01",
-        "provider": "Sodimac"
+        "provider": "Sodimac",
+        "solicitante": "Juan Perez",
+        "orden_estadistica": "1",
+        "razon_social": "Sodimac"
     },
     {
         "id": 4,
@@ -36,7 +45,10 @@
         "status": "OC Liberada",
         "oc": "4",
         "fecha": "2021-01-04",
+        "detalle": "Detalle de Solicitud",
         "provider": "Sodimac",
-        "detalle": "Detalle de Solicitud"
+        "solicitante": "Juan Perez",
+        "orden_estadistica": "1",
+        "razon_social": "Sodimac"
     }
 ]

@@ -3,7 +3,7 @@ import AntdProvider from './AntDesign'
 import AuthProvider from './Auth'
 
 export const wrapPageElement = ({ element }) => (
-    <AuthProvider>{element}</AuthProvider>
+    <>{element}</>
 )
 
 export const wrapRootElement = ({ element }) => (

@@ -9,10 +9,6 @@ import useAuthContext from '../../hooks/useAuthContext'
 
 function Navbar() {
 
-    const { user } = useAuthContext()
-
-    console.log(user)
-
     const [open, setOpen] = useState(false)
 
     return (
@@ -24,7 +20,7 @@ function Navbar() {
                             <Avatar onClick={() => setOpen(true)} size={42} icon={<UserOutlined />} />
                             <div className='flex flex-col'>
                                 <h1 className="text-[#1135A6] text-lg font-bold">
-                                    {user.nombre_Usuario}
+                                    Andrea
                                 </h1>
                                 <p className="text-[#1135A6] text-sm">Administrador</p>
                             </div>
@@ -103,7 +99,7 @@ function Navbar() {
                         Bienvenido/a
                     </h1>
                     <p className='text-xl font-bold'>
-                        {user.nombre_Usuario}
+                        Andrea
                     </p>
                 </div>
                 <div className="flex flex-col justify-center my-8 gap-y-4">
