@@ -18,29 +18,29 @@ function RequestOC() {
         { title: 'Nº OC', dataIndex: 'oc', key: 'oc', align: 'center' },
         { title: 'Proveedor', dataIndex: 'provider', key: 'provider', align: 'center' },
         { title: 'Detalle', dataIndex: 'detalle', key: 'detail', align: 'center' },
-        // {
-        //     title: 'Recepcion', key: 'recepcion', align: 'center', render: (text, record) => {
-        //         return (
-        //             <div className='flex justify-center gap-2'>
-        //                 {
-        //                     record.status == 'OC Enviada' ?
-        //                         <div className='flex justify-center gap-2'>
-        //                             <Button className='px-2'>
-        //                                 <BiCheckDouble />
-        //                             </Button>
-        //                             <Button className='px-2'>
-        //                                 <BiCheck />
-        //                             </Button>
-        //                             <Button className='px-2'>
-        //                                 <BiX />
-        //                             </Button>
-        //                         </div>
-        //                         : ''
-        //                 }
-        //             </div>
-        //         )
-        //     }
-        // }
+        {
+            title: 'Recepcion', key: 'recepcion', align: 'center', render: (text, record) => {
+                return (
+                    <div className='flex justify-center gap-2'>
+                        {
+                            record.status == 'OC Enviada' ?
+                                <div className='flex justify-center gap-2'>
+                                    <Button className='px-2'>
+                                        <BiCheckDouble />
+                                    </Button>
+                                    <Button className='px-2'>
+                                        <BiCheck />
+                                    </Button>
+                                    <Button className='px-2'>
+                                        <BiX />
+                                    </Button>
+                                </div>
+                                : ''
+                        }
+                    </div>
+                )
+            }
+        },
         {
             title: 'Ver', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Link to={`/requests-oc/${record.id}`} >
                 <FaEye size={20} />

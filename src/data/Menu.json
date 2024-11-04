@@ -24,5 +24,22 @@
                 "url": "/providers"
             }
         ]
+    },
+    {
+        "label": "Detalles",
+        "items": [
+            {
+                "name": "Departamentos",
+                "url": "/departament"
+            },
+            {
+                "name": "Centro de costos",
+                "url": "/cost-center"
+            },
+            {
+                "name": "Orden Estadisticas",
+                "url": "/order-statistics"
+            }
+        ]
     }
 ]

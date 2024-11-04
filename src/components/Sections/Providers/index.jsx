@@ -1,10 +1,10 @@
 import React from 'react'
 import Table from '../../Template/Table'
 import ProvidersData from '../../../data/Providers.json'
-import { Breadcrumb } from 'antd'
+import { Breadcrumb, Button } from 'antd'
 import { BsEye } from 'react-icons/bs'
 import { FaEye } from 'react-icons/fa'
-import { Link } from 'gatsby'
+import { Link, navigate } from 'gatsby'
 import Create from './Create'
 import Update from './Update'
 import useProviders from '../../../hooks/useProviders'
@@ -14,6 +14,7 @@ function Providers() {
 
 
     const { data, isLoadign, isSuccess, refetch } = useProviders()
+
 
     const columns = [
         { title: 'Rut', dataIndex: 'rut_Proveedor', key: 'rut', align: 'left', responsive: ['md'] },
@@ -26,16 +27,11 @@ function Providers() {
             title: 'Editar', key: 'edit', align: 'left', responsive: ['md'], render: (text, record) => <Update proveedor={record} />
         },
         {
-            title: 'Detalle', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Link to={`/providers/${record.iD_Proveedores}`} >
-                <FaEye size={20} />
-            </Link>
+            title: 'Detalle', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Button onClick={() => navigate(`/providers/${record.iD_Proveedores}`, { state: record })} >
+                <FaEye />
+            </Button>
         },
     ]
-
-    console.log(data)
-
-
-
     return (
         <div>
             <Breadcrumb
