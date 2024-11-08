@@ -19,6 +19,10 @@ function SignIn() {
                 pass: values.password
             })
                 .then(res => {
+                    if (res.id_Usuario === 0) {
+                        setLoading(false)
+                        return alert('Usuario o contraseña incorrectos')
+                    }
                     localStorage.setItem('correo', res.correo_Usuario)
                     localStorage.setItem('password', res.contraseña_Usuario)
                     authIsSuccess(res)

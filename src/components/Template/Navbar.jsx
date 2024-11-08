@@ -9,6 +9,8 @@ import useAuthContext from '../../hooks/useAuthContext'
 
 function Navbar() {
 
+    const { user } = useAuthContext()
+
     const [open, setOpen] = useState(false)
 
     return (
@@ -20,9 +22,11 @@ function Navbar() {
                             <Avatar onClick={() => setOpen(true)} size={42} icon={<UserOutlined />} />
                             <div className='flex flex-col'>
                                 <h1 className="text-[#1135A6] text-lg font-bold">
-                                    Andrea
+                                    {user.nombre_Usuario}
                                 </h1>
-                                <p className="text-[#1135A6] text-sm">Administrador</p>
+                                <p className="text-[#1135A6] text-sm">
+                                    {user.isAdmin ? 'Administrador' : 'Usuario'}
+                                </p>
                             </div>
 
                         </div>
@@ -89,7 +93,7 @@ function Navbar() {
                     body: 'flex flex-col ',
                     footer: 'flex justify-center',
                 }}
-                footer={<div className="py-4 mb-1"><div >Cerar sesion</div></div>}
+                footer={<div className="py-4 mb-1"><div >Cerrar sesion</div></div>}
             >
                 <div className="mb-4 block w-full">
                     <img src={Logo} alt="The Mirror" width={100} height={100} className="m-auto" />
@@ -99,20 +103,26 @@ function Navbar() {
                         Bienvenido/a
                     </h1>
                     <p className='text-xl font-bold'>
-                        Andrea
+                        {user.nombre_Usuario}
                     </p>
                 </div>
                 <div className="flex flex-col justify-center my-8 gap-y-4">
                     {Menu.map((option, i) => (
-                        <Link
-                            key={i}
-                            to={option.url}
-                            className="text-sm text-[#556a89] hover:text-app py-2 px-4 text-center"
-                            activeClassName="text-app link-active font-medium"
-                        >
-                            {option.name}
-                        </Link>
+                        <Popover key={i} placement='right' content={
+                            <div className='flex flex-col gap-2'>
+                                {
+                                    option.items.map((subitem, index) => (
+                                        <Link key={index} to={subitem.url} className="text-sm text-[#556a89] hover:text-app py-2 px-4 text-center" activeClassName="text-app link-active font-medium">
+                                            {subitem.name}
+                                        </Link>
+                                    ))
+                                }
+                            </div>
+                        }>
+                            <Button type='text' className='w-full text-left text-lg font-bold'>{option.label}</Button>
+                        </Popover>
                     ))}
+
                 </div>
             </Drawer>
 

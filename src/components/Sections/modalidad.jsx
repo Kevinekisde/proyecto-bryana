@@ -116,9 +116,21 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                                     </div>
                                     <div className='grid grid-cols-2 w-full items-center'>
                                         <p>
-                                            Archivo
+                                            Archivo Principal
                                         </p>
                                         <Form.Item name="archivo" rules={[{ required: true, message: 'Por favor ingrese el archivo' }]} className='mb-0'>
+                                            <Dragger>
+                                                <p className="ant-upload-drag-icon">
+                                                    <InboxOutlined size={10} />
+                                                </p>
+                                            </Dragger>
+                                        </Form.Item>
+                                    </div>
+                                    <div className='grid grid-cols-2 w-full items-center'>
+                                        <p>
+                                            Otros Archivos
+                                        </p>
+                                        <Form.Item name="other_archives" className='mb-0'>
                                             <Dragger>
                                                 <p className="ant-upload-drag-icon">
                                                     <InboxOutlined size={10} />

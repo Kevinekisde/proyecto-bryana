@@ -4,14 +4,14 @@ import { Tooltip } from 'antd'
 
 function StatusText({ status }) {
 
-    console.log(status)
+
 
     const [description, setDescription] = React.useState('')
 
 
     const searchDescription = (status) => {
         const result = Status.find(element => element.name === status)
-        console.log(result)
+     
         setDescription(result?.description)
     }
 

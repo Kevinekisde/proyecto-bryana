@@ -6,7 +6,7 @@ import { EditOutlined, LoadingOutlined } from '@ant-design/icons'
 
 const Update = ({ departamento }) => {
 
-    console.log(departamento)
+
 
     const [form] = Form.useForm()
 

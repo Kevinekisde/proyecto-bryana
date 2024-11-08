@@ -25,7 +25,7 @@
     },
     {
         "id": 4,
-        "type": "Solicitud Cotización",
+        "type": "Solicitud sin Solped",
         "ticket": "4",
         "status": "Enviado",
         "detalle": "Detalle de Solicitud",

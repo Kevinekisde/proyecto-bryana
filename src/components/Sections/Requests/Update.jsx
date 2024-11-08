@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Form, Input, Select } from 'antd'
+import { Button, Modal, Form, Input } from 'antd'
+import { alertSuccess } from '../../../utils/alert'
+import Providers from '../../../service/Providers'
 import { EditOutlined, LoadingOutlined } from '@ant-design/icons'
-import { alertSuccess, alertError } from '../../../utils/alert'
-import ProvidersData from '../../../data/Providers.json'
 
-const Update = ({ proveedor }) => {
+const Update = ({ solicitud }) => {
+
 
     const [form] = Form.useForm()
-
-    const [provider, setProvider] = useState({})
 
     const [loading, setLoading] = useState(false)
 
     const [modal, setModal] = useState(false)
 
-    const onFinish = () => {
+    const onFinish = values => {
 
         setLoading(true)
-        setModal(false)
-        setLoading(false)
-        alertSuccess({ message: `Usuario actualizado con éxito` })
+        try {
+
+            Providers.post(values)
+                .then((response) => {
+                    setLoading(false)
+                    setModal(false)
+                    alertSuccess({ message: `Solicitud Actualizada con éxito` })
+
+                })
+
+        } catch (e) {
+            setLoading(false)
+            setModal(false)
+        }
     }
 
     useEffect(() => {
         if (modal) {
-    
-            form.setFieldsValue(proveedor)
+            form.setFieldsValue(solicitud)
         }
-    }, [modal, proveedor])
-
+    }, [modal, solicitud])
 
     return (
         <div>
@@ -41,7 +49,7 @@ const Update = ({ proveedor }) => {
 
             {modal && <Modal
                 open={modal}
-                title="Editar Proveedor"
+                title="Editar Solicitud"
                 centered
                 zIndex={3000}
                 closable={true}
@@ -57,69 +65,44 @@ const Update = ({ proveedor }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="rut_Proveedor"
+                        name="solped"
                         rules={[{
                             required: true,
-                            message: 'Ingrese Rut de Proveedor'
+                            message: 'Ingrese N° Solped'
                         }]}
                     >
                         <Input
-                            placeholder="Rut"
+                            placeholder="N° Solped"
                             disabled={loading}
                         />
                     </Form.Item>
 
                     <Form.Item
                         className="mb-2"
-                        name="nombre_Fantasia"
+                        name="detalle"
                         rules={[{
                             required: true,
-                            message: 'Ingrese Nombre Fantasía'
+                            message: 'Ingrese Detalle'
                         }]}
                     >
                         <Input
-                            placeholder="Nombre Fantasía"
+                            placeholder="Detalle"
                             disabled={loading}
                         />
                     </Form.Item>
 
+
+
                     <Form.Item
-                        className="mb-0"
-                        name="iD_Bien_Servicio"
+                        className="mb-2"
+                        name="bien_servicio"
                         rules={[{
                             required: true,
                             message: 'Ingrese Bien/Servicio'
                         }]}
                     >
                         <Input
-                            placeholder="Bien/Servicio"
-                            disabled={loading}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        className="mb-0"
-                        name="comuna"
-                        rules={[{
-                            required: true,
-                            message: 'Ingrese Comuna'
-                        }]}
-                    >
-                        <Input
-                            placeholder="Comuna"
-                            disabled={loading}
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        className="mb-0"
-                        name="telefono_Proveedor"
-                        rules={[{
-                            required: true,
-                            message: 'Ingrese Contacto'
-                        }]}
-                    >
-                        <Input
-                            placeholder="Contacto"
+                            placeholder="Ingrese Bien/Servicio"
                             disabled={loading}
                         />
                     </Form.Item>
@@ -132,7 +115,7 @@ const Update = ({ proveedor }) => {
                         disabled={loading}
                         block={true}
                     >
-                        Guardar
+                        Editar
                     </Button>
 
                 </Form>

@@ -1,13 +1,41 @@
 import { Breadcrumb, Button } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import Table from '../../Template/Table'
+import { Table as AntdTable } from 'antd'
 import Tickets from '../../../data/TicketsOc.json'
 import { BiCheck, BiCheckDouble, BiX } from 'react-icons/bi'
 import StatusText from '../../Template/StatusText'
 import { FaEye } from 'react-icons/fa'
-import { Link } from 'gatsby'
+import { Link, navigate } from 'gatsby'
+import Email from './Email'
+import useAuthContext from '../../../hooks/useAuthContext'
+import Actions from './Actions'
+import { normalizeText } from '../../../utils/paragraph'
+import Search from './Search'
+import { isNotEmpty } from '../../../utils/validations'
+import Excel from './Excel'
 
 function RequestOC() {
+
+    const { user } = useAuthContext()
+
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [search, setSearch] = useState({
+        data: [],
+        ticket: ''
+    })
+
+    const handleSearch = e => {
+        const ticket = normalizeText(e.target.value)
+        const result = Tickets.filter(t => normalizeText(t.oc).includes(ticket))
+        setSearch({
+            data: result,
+            ticket
+        })
+    }
+
+
 
     const columns = [
         { title: 'Nº Ticket', dataIndex: 'ticket', key: 'name', align: 'left', responsive: ['md'] },
@@ -28,7 +56,9 @@ function RequestOC() {
                                     <Button className='px-2'>
                                         <BiCheckDouble />
                                     </Button>
-                                    <Button className='px-2'>
+                                    <Button onClick={() => navigate(`/requests-oc/reception/${record.id}`, {
+                                        state: { ticket: record }
+                                    })} className='px-2'>
                                         <BiCheck />
                                     </Button>
                                     <Button className='px-2'>
@@ -42,11 +72,45 @@ function RequestOC() {
             }
         },
         {
-            title: 'Ver', key: 'detail', align: 'left', responsive: ['md'], render: (text, record) => <Link to={`/requests-oc/${record.id}`} >
-                <FaEye size={20} />
-            </Link>
+            title: 'Ver', key: 'detail', align: 'center', responsive: ['md'], render: (text, record) =>
+                <div className='flex justify-center gap-2'>
+                    <Link to={`/requests-oc/${record.id}`} >
+                        <FaEye size={20} />
+                    </Link>
+                </div>
         },
+        {
+            title: 'Acciones', key: 'actions', align: 'center', render: (text, record) => <Actions Solicitud={record} />
+        },
+        {
+            title: 'Seleccionar',
+            key: 'selection',
+            align: 'center',
+            render: (text, record) => {
+                return (
+                    <div className='flex justify-center gap-2'>
+                        {
+                            record.status == 'Espera liberacion' &&
+                            <Button
+                                className='px-2'
+                                onClick={() => {
+                                    const selected = selectedRowKeys.includes(record.ticket)
+                                    if (selected) {
+                                        setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.ticket))
+                                    } else {
+                                        setSelectedRowKeys([...selectedRowKeys, record.ticket])
+                                    }
+                                }}
+                            >
+                                {selectedRowKeys.includes(record.ticket) ? <BiCheck /> : <BiX />}
+                            </Button>
+                        }
+                    </div>
+                )
+            }
+        }
     ]
+
 
     return (
         <div>
@@ -68,10 +132,25 @@ function RequestOC() {
                     Solicitudes OC
                 </p>
             </div>
+            <div className="flex flex-col lg:flex-row items-center gap-2 mb-4">
+                <div className="flex-1 order-1">
+                </div>
+                {
+                    user.isAdmin &&
+                    <div className="flex gap-x-2 order-2">
+                        <Email selectedRowKeys={selectedRowKeys} />
+                        <Excel />
+                    </div>
+                }
+                <Search onChange={handleSearch} />
+            </div>
 
             <Table
                 columns={columns}
-                data={Tickets}
+                data={isNotEmpty(search.ticket) ? search.data : Tickets}
+                ActiverowSelection
+                selectedRowKeys={selectedRowKeys}
+                setSelectedRowKeys={setSelectedRowKeys}
             />
         </div>
     )

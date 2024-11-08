@@ -14,8 +14,13 @@ const AuthProvider = ({ children }) => {
 
 
     const setUserAttributes = attributes => {
-        const { id_Usuario, correo_Usuario, nombre_Usuario } = attributes;
-        setUser({ id_Usuario, correo_Usuario, nombre_Usuario });
+        const { id_Usuario, correo_Usuario, nombre_Usuario, admin } = attributes;
+        setUser({
+            id_Usuario,
+            correo_Usuario,
+            nombre_Usuario,
+            isAdmin: admin ? true : false
+        });
     }
 
 
@@ -36,7 +41,6 @@ const AuthProvider = ({ children }) => {
                 pass: password.trim()
             })
                 .then(res => {
-                    console.log(res);
                     setUserAttributes(res);
                     setIsSignedIn(true);
                 })
