@@ -6,7 +6,7 @@ const Search = ({ onChange }) => {
 
     return (
         <Input
-            placeholder="Buscar Solicitud"
+            placeholder="Buscar Reemplazo"
             allowClear={{ clearIcon: <span>Limpiar</span> }}
             prefix={<SearchOutlined />}
             onChange={onChange}

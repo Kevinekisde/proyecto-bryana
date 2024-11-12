@@ -39,6 +39,31 @@
             {
                 "name": "Orden Estadisticas",
                 "url": "/order-statistics"
+            },
+            {
+                "name": "Usuarios",
+                "url": "/users"
+            },
+            {
+                "name": "Remplazos",
+                "url": "/replacements"
+            }
+        ]
+    },
+    {
+        "label": "Contabilidad",
+        "items": [
+            {
+                "name": "Envió correo recepción",
+                "url": "/send-email"
+            },
+            {
+                "name": "Historial Correos",
+                "url": "/email-history"
+            },
+            {
+                "name": "Detalle recepción OC",
+                "url": "/detail-reception"
             }
         ]
     }

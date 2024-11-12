@@ -17,7 +17,7 @@ function Request() {
 
     const handleSearch = e => {
         const ticket = normalizeText(e.target.value)
-        const result = Tickets.filter(t => normalizeText(t.ticket).includes(ticket))
+        const result = Tickets.filter(t => t.detalle && normalizeText(t.detalle).includes(ticket) || t.bien_servicio && normalizeText(t.bien_servicio).includes(ticket) || normalizeText(t.type).includes(ticket) || normalizeText(t.ticket).includes(ticket) || normalizeText(t.status).includes(ticket))
         setSearch({
             data: result,
             ticket
@@ -61,7 +61,6 @@ function Request() {
                 </p>
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-2 mb-4">
-
                 <Search onChange={handleSearch} />
             </div>
 

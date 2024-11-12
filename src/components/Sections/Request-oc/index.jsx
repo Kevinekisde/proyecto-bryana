@@ -27,8 +27,9 @@ function RequestOC() {
     })
 
     const handleSearch = e => {
+
         const ticket = normalizeText(e.target.value)
-        const result = Tickets.filter(t => normalizeText(t.oc).includes(ticket))
+        const result = Tickets.filter(t => normalizeText(t.oc).includes(ticket) || normalizeText(t.type).includes(ticket) || normalizeText(t.status).includes(ticket) || normalizeText(t.oc).includes(ticket) || normalizeText(t.provider).includes(ticket))
         setSearch({
             data: result,
             ticket

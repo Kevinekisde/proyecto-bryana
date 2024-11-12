@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Table from '../../Template/Table'
 import ProvidersData from '../../../data/Providers.json'
 import { Breadcrumb, Button } from 'antd'
@@ -9,6 +9,9 @@ import Create from './Create'
 import Update from './Update'
 import useProviders from '../../../hooks/useProviders'
 import useAuthContext from '../../../hooks/useAuthContext'
+import { normalizeText } from '../../../utils/paragraph'
+import Search from './Search'
+import { isNotEmpty } from '../../../utils/validations'
 
 
 function Providers() {
@@ -17,6 +20,21 @@ function Providers() {
     const { user } = useAuthContext()
 
     const { data, isLoadign, isSuccess, refetch } = useProviders()
+
+    const [search, setSearch] = useState({
+        data: [],
+        provider: ''
+    })
+
+
+    const handleSearch = e => {
+        const provider = normalizeText(e.target.value)
+        const result = data.filter(p => normalizeText(p.rut_Proveedor).includes(provider) || normalizeText(p.razon_Social).includes(provider) || normalizeText(p.nombre_Fantasia).includes(provider) || normalizeText(p.comuna).includes(provider))
+        setSearch({
+            data: result,
+            provider
+        })
+    }
 
 
     const columns = [
@@ -60,7 +78,6 @@ function Providers() {
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-2 mb-4">
                 <div className="flex-1 order-1">
-                    <p className="text-sm text-[#556a89]">Listado de proveedores</p>
                 </div>
                 <div className="flex gap-x-2 order-2">
                     {
@@ -68,11 +85,12 @@ function Providers() {
                         <Create refetch={refetch} />
                     }
                 </div>
+                <Search onChange={handleSearch} />
             </div>
             <Table
                 loading={isLoadign}
                 columns={columns}
-                data={isSuccess ? data : []}
+                data={isSuccess ? (isNotEmpty(search.provider) ? search.data : data) : []}
             />
         </div>
     )

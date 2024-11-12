@@ -27,7 +27,7 @@
         "id": 4,
         "type": "Solicitud sin Solped",
         "ticket": "4",
-        "status": "Enviado",
+        "status": "Entregado",
         "detalle": "Detalle de Solicitud",
         "bien_servicio": "Pescadores",
         "fecha": "2021-01-04"
