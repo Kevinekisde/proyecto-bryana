@@ -45,7 +45,7 @@ function Cancel({ reemplazo }) {
                             className="px-2"
                             onClick={() => setModal(false)}
                         >
-                            Cancelar
+                            Aceptar
                         </Button>
                     </div>
                 </Modal>

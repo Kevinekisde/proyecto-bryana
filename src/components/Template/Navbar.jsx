@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Logo from '../../assets/Logo.png'
 import Menu from '../../data/Menu.json'
-import { Link } from 'gatsby'
+import { Link, navigate } from 'gatsby'
 import { Avatar, Button, Drawer, Popover } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { PiList, PiNewspaper, PiPaperPlane } from 'react-icons/pi'
@@ -12,6 +12,12 @@ function Navbar() {
     const { user } = useAuthContext()
 
     const [open, setOpen] = useState(false)
+
+    const handleLogout = () => {
+        localStorage.removeItem('correo')
+        localStorage.removeItem('password')
+        navigate('/')
+    }
 
     return (
         <>
@@ -35,11 +41,11 @@ function Navbar() {
                             <div className='flex ms-5 gap-8'>
                                 {
                                     Menu.map((item, index) => (
-                                        <Popover placement='bottom' key={index} content={
-                                            <div className='flex flex-col gap-2'>
+                                        <Popover className='cursor-pointer' placement='bottom' key={index} content={
+                                            <div className='flex flex-col gap-2 !cursor-pointer'>
                                                 {
                                                     item.items.map((subitem, i) => (
-                                                        <Link key={i} to={subitem.url} className="text-sm text-[#556a89] hover:text-app py-2 px-4 text-center" activeClassName="text-app link-active font-medium">
+                                                        <Link key={i} to={subitem.url} className="text-sm text-[#556a89] hover:text-app py-2 px-4 text-center cursor-pointer" activeClassName="text-app link-active font-medium">
                                                             {subitem.name}
                                                         </Link>
                                                     ))
@@ -93,7 +99,7 @@ function Navbar() {
                     body: 'flex flex-col ',
                     footer: 'flex justify-center',
                 }}
-                footer={<div className="py-4 mb-1"><div >Cerrar sesion</div></div>}
+                footer={<div className="py-4 mb-1"><div className='cursor-pointer' onClick={() => handleLogout()} >Cerrar sesion</div></div>}
             >
                 <div className="mb-4 block w-full">
                     <img src={Logo} alt="The Mirror" width={100} height={100} className="m-auto" />

@@ -9,6 +9,8 @@ const Layout = ({ children }) => {
 
     const { user, isSignedIn } = useAuthContext()
 
+    console.log(isSignedIn)
+
     return (
         <>
 

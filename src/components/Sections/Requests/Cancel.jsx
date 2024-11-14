@@ -4,8 +4,8 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { SlBan } from 'react-icons/sl';
 
 
-function Cancel( solicitud ) {
-    
+function Cancel(solicitud) {
+
 
     const [loading, setLoading] = useState(false)
     const [modal, setModal] = useState(false)
@@ -45,7 +45,7 @@ function Cancel( solicitud ) {
                             className="px-2"
                             onClick={() => setModal(false)}
                         >
-                            Cancelar
+                            Aceptar
                         </Button>
                     </div>
                 </Modal>

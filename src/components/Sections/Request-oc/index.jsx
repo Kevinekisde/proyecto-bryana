@@ -1,12 +1,10 @@
 import { Breadcrumb, Button } from 'antd'
 import React, { useState } from 'react'
 import Table from '../../Template/Table'
-import { Table as AntdTable } from 'antd'
 import Tickets from '../../../data/TicketsOc.json'
 import { BiCheck, BiCheckDouble, BiX } from 'react-icons/bi'
 import StatusText from '../../Template/StatusText'
-import { FaEye } from 'react-icons/fa'
-import { Link, navigate } from 'gatsby'
+import { navigate } from 'gatsby'
 import Email from './Email'
 import useAuthContext from '../../../hooks/useAuthContext'
 import Actions from './Actions'
@@ -14,6 +12,7 @@ import { normalizeText } from '../../../utils/paragraph'
 import Search from './Search'
 import { isNotEmpty } from '../../../utils/validations'
 import Excel from './Excel'
+import { FaEye } from 'react-icons/fa'
 
 function RequestOC() {
 
@@ -57,7 +56,7 @@ function RequestOC() {
                                     <Button className='px-2'>
                                         <BiCheckDouble />
                                     </Button>
-                                    <Button onClick={() => navigate(`/requests-oc/reception/${record.id}`, {
+                                    <Button onClick={() => navigate(`/requests-oc/reception/${record.ticket}`, {
                                         state: { ticket: record }
                                     })} className='px-2'>
                                         <BiCheck />
@@ -75,9 +74,11 @@ function RequestOC() {
         {
             title: 'Ver', key: 'detail', align: 'center', responsive: ['md'], render: (text, record) =>
                 <div className='flex justify-center gap-2'>
-                    <Link to={`/requests-oc/${record.id}`} >
-                        <FaEye size={20} />
-                    </Link>
+                    <Button onClick={() => navigate(`/requests-oc/reception/${record.id}`, {
+                        state: { ticket: record }
+                    })} className='px-2'>
+                        <FaEye />
+                    </Button>
                 </div>
         },
         {
