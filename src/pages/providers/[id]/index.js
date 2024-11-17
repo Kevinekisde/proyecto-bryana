@@ -12,7 +12,7 @@ function ProviderDetail({ location }) {
             <Breadcrumb
                 items={[
                     {
-                        title: <a href="/dashboard">Inicio</a>,
+                        title: <a href="/requests">Inicio</a>,
                     },
                     {
                         title: <a href="/location.state.iD_Proveedoress">

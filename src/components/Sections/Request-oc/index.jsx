@@ -119,7 +119,7 @@ function RequestOC() {
             <Breadcrumb
                 items={[
                     {
-                        title: <a href="/dashboard">Inicio</a>,
+                        title: <a href="/requests">Inicio</a>,
                     },
                     {
                         title: 'Solicitudes OC',

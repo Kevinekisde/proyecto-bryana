@@ -44,7 +44,7 @@ function Usuarios() {
             <Breadcrumb
                 items={[
                     {
-                        title: <a href="/dashboard">Inicio</a>,
+                        title: <a href="/requests">Inicio</a>,
                     },
                     {
                         title: 'Administracion',
@@ -61,7 +61,7 @@ function Usuarios() {
                 </p>
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-2 mb-4">
-                 <div className="flex-1 order-1">
+                <div className="flex-1 order-1">
                 </div>
                 <div className="flex gap-x-2 order-2">
                     <Create />

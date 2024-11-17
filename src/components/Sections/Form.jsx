@@ -27,7 +27,7 @@ function Create() {
             <Breadcrumb
                 items={[
                     {
-                        title: <a href="/dashboard">Inicio</a>,
+                        title: <a href="/requests">Inicio</a>,
                     },
                     {
                         title: 'Crear solicitud',
@@ -54,7 +54,7 @@ function Create() {
                         <Modalidad {...stepProps} />
                     }
                 </Form>
-                <BackButton />
+
 
             </div>
         </div>

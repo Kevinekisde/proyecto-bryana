@@ -21,16 +21,16 @@ function Navbar() {
 
     return (
         <>
-            <header className="hidden lg:block w-full bg-white">
+            <div className="hidden lg:block w-full text-white  ">
                 <div className="container px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className='flex items-center gap-2'>
-                            <Avatar onClick={() => setOpen(true)} size={42} icon={<UserOutlined />} />
+                            <Avatar className='cursor-pointer bg-white text-app' onClick={() => setOpen(true)} size={42} icon={<UserOutlined color='#f3f3f3' />} />
                             <div className='flex flex-col'>
-                                <h1 className="text-[#1135A6] text-lg font-bold">
+                                <h1 className="text-white text-lg font-bold">
                                     {user.nombre_Usuario}
                                 </h1>
-                                <p className="text-[#1135A6] text-sm">
+                                <p className="text-white text-sm">
                                     {user.isAdmin ? 'Administrador' : 'Usuario'}
                                 </p>
                             </div>
@@ -41,11 +41,11 @@ function Navbar() {
                             <div className='flex ms-5 gap-8'>
                                 {
                                     Menu.map((item, index) => (
-                                        <Popover className='cursor-pointer' placement='bottom' key={index} content={
+                                        <Popover className='cursor-pointer border-transparent transition-all duration-200 hover:border-white  border-b-2' placement='bottom' key={index} content={
                                             <div className='flex flex-col gap-2 !cursor-pointer'>
                                                 {
                                                     item.items.map((subitem, i) => (
-                                                        <Link key={i} to={subitem.url} className="text-sm text-[#556a89] hover:text-app py-2 px-4 text-center cursor-pointer" activeClassName="text-app link-active font-medium">
+                                                        <Link key={i} to={subitem.url} className="text-sm text-[#556a89] hover:text-app hover:border-app border-b-2 border-transparent transition-all duration-200 py-2 px-4 text-center cursor-pointer " activeClassName="text-app link-active font-medium">
                                                             {subitem.name}
                                                         </Link>
                                                     ))
@@ -62,10 +62,10 @@ function Navbar() {
 
                     </div>
                 </div>
-            </header>
+            </div>
             <div className="lg:hidden fixed bottom-0 z-50 w-full py-2 bg-white border-t border-[slate-400]">
                 <div className="flex flex-row justify-center space-x-1">
-                    <Link to="/" className="flex flex-col justify-center items-center p-3" activeClassName="text-app link-active font-medium">
+                    <Link to="/requests-oc" className="flex flex-col justify-center items-center p-3" activeClassName="text-app link-active font-medium">
                         <PiNewspaper size={24} />
                         <p className="text-xs mt-1">Solicitudes OC</p>
                     </Link>

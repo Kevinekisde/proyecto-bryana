@@ -17,7 +17,7 @@ function index({ location }) {
         { title: 'Texto Breve', dataIndex: 'texto_breve', key: 'texto_breve', align: 'center', responsive: ['md'] },
         { title: 'Material', dataIndex: 'material', key: 'material', align: 'center', responsive: ['md'] },
         { title: 'Valor Neto', dataIndex: 'valor_neto', key: 'valor_neto', align: 'center', responsive: ['md'] },
-        
+
     ]
 
 
@@ -27,7 +27,7 @@ function index({ location }) {
             <Breadcrumb
                 items={[
                     {
-                        title: <a href="/dashboard">Inicio</a>,
+                        title: <a href="/requests">Inicio</a>,
                     },
                     {
                         title: <a href="/requests-oc">

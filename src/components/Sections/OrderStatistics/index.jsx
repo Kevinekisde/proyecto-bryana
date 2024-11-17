@@ -1,10 +1,29 @@
 import { Breadcrumb, Table } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import OrdenEstadisticaData from '../../../data/OrdenEstadistica.json'
 import Actions from './Actions'
 import Create from './Create'
+import Search from './Search'
+import { normalizeText } from '../../../utils/paragraph'
+import { isNotEmpty } from '../../../utils/validations'
 
 function OrderStatistics() {
+
+    const [search, setSearch] = useState({
+        data: [],
+        order: ''
+    })
+
+    const handleSearch = e => {
+        const order = normalizeText(e.target.value)
+        const result = OrdenEstadisticaData.filter(u => normalizeText(u.Nombre).includes(order) || normalizeText(u.Codigo_Nave).includes(order) || normalizeText(u.Centro_de_Costo).includes(order))
+
+        setSearch({
+            data: result,
+            order
+        })
+    }
+
     const columns = [
         { title: 'Id', dataIndex: 'id_Orden_Estadistica', key: 'id_Orden_Estadistica', align: 'left', responsive: ['md'] },
         { title: 'Nombre', dataIndex: 'Nombre', key: 'Nombre', align: 'left', responsive: ['md'] },
@@ -20,7 +39,7 @@ function OrderStatistics() {
             <Breadcrumb
                 items={[
                     {
-                        title: <a href="/dashboard">Inicio</a>,
+                        title: <a href="/requests">Inicio</a>,
                     },
                     {
                         title: 'Ordenes Estadisticas',
@@ -41,10 +60,11 @@ function OrderStatistics() {
                 <div className="flex gap-x-2 order-2">
                     <Create />
                 </div>
+                <Search onChange={handleSearch} />
             </div>
             <Table
                 columns={columns}
-                dataSource={OrdenEstadisticaData}
+                dataSource={isNotEmpty(search.order) ? search.data : OrdenEstadisticaData}
                 rowKey='id_Orden_Estadistica'
             />
 
