@@ -6,8 +6,15 @@ import Actions from './Actions'
 import Search from './Search'
 import { normalizeText } from '../../../utils/paragraph'
 import { isNotEmpty } from '../../../utils/validations'
+import useAuthContext from '../../../hooks/useAuthContext'
+import useCentroCosto from '../../../hooks/useCentroCosto'
 
 function CentroDeCosto() {
+
+    const { user } = useAuthContext()
+
+
+    const { isSuccess, data, refetch } = useCentroCosto()
 
     const [search, setSearch] = useState({
         data: [],
@@ -15,9 +22,8 @@ function CentroDeCosto() {
     })
 
     const handleSearch = e => {
-        console.log(e.target.value)
         const ceco = normalizeText(e.target.value)
-        const result = CentroCostosData.filter(u => normalizeText(u.Nombre).includes(ceco) || normalizeText(u.Codigo_Ceco).includes(ceco))
+        const result = data.filter(u => normalizeText(u.id_Ceco.toString()).includes(ceco) || normalizeText(u.nombre).includes(ceco) || normalizeText(u.codigo_Ceco.toString()).includes(ceco))
 
         setSearch({
             data: result,
@@ -27,12 +33,20 @@ function CentroDeCosto() {
 
     const columns = [
         { title: 'Id', dataIndex: 'id_Ceco', key: 'id_Ceco', align: 'left', responsive: ['md'] },
-        { title: 'Nombre', dataIndex: 'Nombre', key: 'Nombre', align: 'left', responsive: ['md'] },
-        { title: 'Codigo', dataIndex: 'Codigo_Ceco', key: 'Codigo_Ceco', align: 'center' },
-        {
-            title: 'Acciones', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => <Actions Ceco={record} />
-        },
+        { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', align: 'left', responsive: ['md'] },
+        { title: 'Codigo', dataIndex: 'codigo_Ceco', key: 'codigo_Ceco', align: 'center' },
+
     ]
+
+    if (user.isAdmin) {
+        columns.push(
+
+            {
+                title: 'Acciones', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => <Actions Ceco={record} refetch={refetch} />
+            }
+        )
+    }
+
     return (
         <div>
             <Breadcrumb
@@ -56,14 +70,23 @@ function CentroDeCosto() {
                 <div className="flex-1 order-1">
                 </div>
                 <div className="flex gap-x-2 order-2">
-                    <Create />
+                    {
+                        user.isAdmin &&
+                        <Create refetch={refetch} />
+                    }
                 </div>
                 <Search onChange={handleSearch} />
             </div>
             <Table
                 columns={columns}
-                dataSource={isNotEmpty(search.ceco) ? search.data : CentroCostosData}
+                dataSource={isSuccess ? (isNotEmpty(search.ceco) ? search.data : data) : []}
                 rowKey='id_Ceco'
+                pagination={
+                    {
+                        defaultPageSize: 10,
+                        showSizeChanger: false,
+                    }
+                }
             />
 
         </div>

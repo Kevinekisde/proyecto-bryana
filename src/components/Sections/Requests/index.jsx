@@ -1,23 +1,29 @@
 import React, { useState } from 'react'
 import Table from '../../Template/Table'
-import Tickets from '../../../data/tickets.json'
 import { Breadcrumb } from 'antd'
 import Actions from './Actions'
 import Cotizar from './Cotizar'
 import { normalizeText } from '../../../utils/paragraph'
 import Search from './Search'
 import { isNotEmpty } from '../../../utils/validations'
+import useAuthContext from '../../../hooks/useAuthContext'
+import useRequest from '../../../hooks/useRequest'
 
 function Request() {
+
+    const { user } = useAuthContext()
+
+    const { data, isLoading, isError, error, isSuccess } = useRequest()
 
     const [search, setSearch] = useState({
         data: [],
         ticket: ''
     })
 
+
     const handleSearch = e => {
         const ticket = normalizeText(e.target.value)
-        const result = Tickets.filter(t => t.detalle && normalizeText(t.detalle).includes(ticket) || t.bien_servicio && normalizeText(t.bien_servicio).includes(ticket) || normalizeText(t.type).includes(ticket) || normalizeText(t.ticket).includes(ticket) || normalizeText(t.status).includes(ticket))
+        const result = data.filter(t => normalizeText(t.iD_Cotizacion.toString()).includes(ticket) || normalizeText(t.estado).includes(ticket) || normalizeText(t.solped.toString()).includes(ticket) || normalizeText(t.detalle).includes(ticket) || normalizeText(t.iD_Bien_Servicio).includes(ticket))
         setSearch({
             data: result,
             ticket
@@ -25,20 +31,34 @@ function Request() {
     }
 
     const columns = [
-        { title: 'Nº Ticket', dataIndex: 'ticket', key: 'name', align: 'left', responsive: ['md'] },
-        { title: 'Tipo de solicitud', dataIndex: 'type', key: 'type', align: 'left', responsive: ['md'] },
-        { title: 'Estado', dataIndex: 'status', key: 'status', align: 'center' },
-        { title: 'Fecha', dataIndex: 'fecha', key: 'date', align: 'center', responsive: ['md'] },
-        { title: 'Nº Solped', dataIndex: 'solped', key: 'solped', align: 'center' },
+        { title: 'N° Cotizacion', dataIndex: 'iD_Cotizacion', key: 'name', align: 'left', responsive: ['md'] },
+        {
+            title: 'Tipo de solicitud', key: 'type', align: 'left', responsive: ['md'], render: (text, record) => {
+                return record.solped == 0 ? 'Solicitud sin Solped' : 'Solicitud de cotizacion con solped'
+            }
+        },
+        { title: 'Estado', dataIndex: 'estado', key: 'status', align: 'center' },
+        { title: 'Fecha', dataIndex: 'fecha_Creacion_Cotizacion', key: 'date', align: 'center', responsive: ['md'], render: (text, record) => new Date(record.fecha_Creacion_Cotizacion).toLocaleDateString() },
+        {
+            title: 'Nº Solped', dataIndex: 'solped', key: 'solped', align: 'center', render: (text, record) => {
+                return record.solped == 0 ? 'Sin solped' : record.solped
+            }
+        },
         { title: 'Detalle', dataIndex: 'detalle', key: 'detail', align: 'center' },
-        { title: 'Bien/Servicio', dataIndex: 'bien_servicio', key: 'bien_servicio', align: 'center' },
+        { title: 'Bien/Servicio', dataIndex: 'iD_Bien_Servicio', key: 'bien_servicio', align: 'center' },
         {
             title: 'Acciones', dataIndex: 'actions', key: 'actions', align: 'center', render: (text, record) => <Actions Solicitud={record} />
         },
-        {
-            title: 'Cotizar', dataIndex: 'cotizar', key: 'cotizar', align: 'center', render: (text, record) => <Cotizar />
-        }
     ]
+
+    if (user.isAdmin) {
+
+        columns.push(
+            {
+                title: 'Cotizar', dataIndex: 'cotizar', key: 'cotizar', align: 'center', render: (text, record) => <Cotizar />
+            }
+        )
+    }
 
     return (
         <div>
@@ -66,7 +86,7 @@ function Request() {
 
             <Table
                 columns={columns}
-                data={isNotEmpty(search.ticket) ? search.data : Tickets}
+                data={isSuccess ? (isNotEmpty(search.ticket) ? search.data : data) : []}
             />
         </div>
     )

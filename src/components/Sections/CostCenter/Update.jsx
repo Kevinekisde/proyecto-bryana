@@ -3,8 +3,9 @@ import { Button, Modal, Form, Input } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
 import Providers from '../../../service/Providers'
 import { EditOutlined, LoadingOutlined } from '@ant-design/icons'
+import CentroCosto from '../../../service/CentroCosto'
 
-const Update = ({ Ceco }) => {
+const Update = ({ Ceco, refetch }) => {
 
     const [form] = Form.useForm()
 
@@ -17,11 +18,15 @@ const Update = ({ Ceco }) => {
         setLoading(true)
         try {
 
-            Providers.post(values)
+            CentroCosto.update(Ceco.id_Ceco, {
+                Id_Ceco: Ceco.id_Ceco.toString(),
+                ...values
+            })
                 .then((response) => {
                     setLoading(false)
                     setModal(false)
-                    alertSuccess({ message: `Centro creado con éxito` })
+                    alertSuccess({ message: `Centro de costo Actualizado con éxito` })
+                    refetch()
 
                 })
 
@@ -64,7 +69,7 @@ const Update = ({ Ceco }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="Nombre"
+                        name="nombre"
                         rules={[{
                             required: true,
                             message: 'Ingrese Nombre'
@@ -78,7 +83,7 @@ const Update = ({ Ceco }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="Codigo_Ceco"
+                        name="codigo_Ceco"
                         rules={[{
                             required: true,
                             message: 'Ingrese Codigo'

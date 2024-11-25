@@ -2,26 +2,34 @@ import React, { useState } from 'react'
 import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess, alertError } from '../../../utils/alert'
 import Providers from '../../../service/Providers'
+import useBienServicio from '../../../hooks/useBienServicio'
 
 const Create = ({ refetch }) => {
 
+    const { data, isLoading, isSuccess } = useBienServicio()
     const [loading, setLoading] = useState(false)
 
     const [modal, setModal] = useState(false)
 
-    const onFinish = values => {
+    console.log(data)
 
-        const data = {
+    const onFinish = values => {
+        const id = data.find(item => item.bien_Servicio == values.iD_Bien_Servicio).iD_Bien_Servicio
+
+        const dataValues = {
             ...values,
+            Id_Bien_Servicio: id.toString(),
+            Estado: true,
             banco: values.banco ? values.banco : '',
             swift1: values.swift1 ? values.swift1 : '',
             swift2: values.swift2 ? values.swift2 : ''
         }
 
+
         setLoading(true)
         try {
 
-            Providers.post(data)
+            Providers.post(dataValues)
                 .then((response) => {
                     setLoading(false)
                     setModal(false)
@@ -90,21 +98,7 @@ const Create = ({ refetch }) => {
                             disabled={loading}
                         />
                     </Form.Item>
-                    <Form.Item
-                        className="mb-2"
-                        name="company_name"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Ingrese Nombre de Proveedor'
-                            }
-                        ]}
-                    >
-                        <Input
-                            placeholder="Nombre"
-                            disabled={loading}
-                        />
-                    </Form.Item>
+
 
                     <Form.Item
                         className="mb-2"
@@ -128,10 +122,22 @@ const Create = ({ refetch }) => {
                             message: 'Ingrese Bien/Servicio'
                         }]}
                     >
-                        <Input
-                            placeholder="Bien/Servicio"
-                            disabled={loading}
-                        />
+                        {
+                            isSuccess &&
+                            <Select
+                                placeholder="Bien/Servicio"
+                                disabled={loading}
+                                showSearch={true}
+
+                            >
+                                {
+                                    data.map((item, index) => (
+                                        <Select.Option key={item.bien_Servicio} value={item.bien_Servicio}>{item.bien_Servicio}</Select.Option>
+                                    ))
+                                }
+                            </Select>
+                        }
+
                     </Form.Item>
                     <Form.Item
                         className="mb-2"
@@ -264,19 +270,7 @@ const Create = ({ refetch }) => {
                             disabled={loading}
                         />
                     </Form.Item>
-                    <Form.Item
-                        className="mb-2"
-                        name="swift2"
-                        rules={[{
-                            required: false,
-                            message: 'Ingrese Swift 2'
-                        }]}
-                    >
-                        <Input
-                            placeholder="Swift 2"
-                            disabled={loading}
-                        />
-                    </Form.Item>
+                   
 
                     <Button
                         type="primary"

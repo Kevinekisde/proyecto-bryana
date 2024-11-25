@@ -1,21 +1,31 @@
 import React, { useState } from 'react'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
-import Providers from '../../../service/Providers'
+import Departamento from '../../../service/Departaments'
+import useUsers from '../../../hooks/useUsers'
 
 const Create = ({ refetch }) => {
+
+    const { data, isLoading, isSuccess } = useUsers()
+
+    console.log(data)
 
     const [loading, setLoading] = useState(false)
 
     const [modal, setModal] = useState(false)
 
     const onFinish = values => {
-
-
         setLoading(true)
         try {
 
-            Providers.post(values)
+            const id = data.find(u => u.nombre_Completo == values.Encargado).id_Usuario
+
+            const dataValues = {
+                ...values,
+                Encargado: id.toString(),
+            }
+
+            Departamento.post(dataValues)
                 .then((response) => {
                     setLoading(false)
                     setModal(false)
@@ -83,19 +93,25 @@ const Create = ({ refetch }) => {
                         />
                     </Form.Item>
 
-                    <Form.Item
-                        className="mb-2"
-                        name="Encargado"
-                        rules={[{
-                            required: true,
-                            message: 'Ingrese Encargado'
-                        }]}
-                    >
-                        <Input
-                            placeholder="Encargado"
-                            disabled={loading}
-                        />
-                    </Form.Item>
+                    {
+                        isSuccess &&
+                        <Form.Item
+                            className="mb-2"
+                            name="Encargado"
+                            rules={[{
+                                required: true,
+                                message: 'Ingrese Encargado'
+                            }]}
+                        >
+                            <Select placeholder="Encargado" disabled={loading} showSearch>
+                                {data?.filter(u => u.activado == true).map(u => <Select.Option key={u.id_Usuario} value={u.nombre_Completo}>
+                                    {
+                                        u.nombre_Completo
+                                    }
+                                </Select.Option>)}
+                            </Select>
+                        </Form.Item>
+                    }
 
                     <Button
                         type="primary"

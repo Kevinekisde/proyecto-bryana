@@ -3,14 +3,18 @@ import { Select, Button, Radio, Space, Input, Upload } from 'antd'
 import Dragger from 'antd/es/upload/Dragger'
 import React, { useState } from 'react'
 import { InboxOutlined } from '@ant-design/icons'
+import useBienServicio from '../../hooks/useBienServicio'
 
-function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSolicitud, previousStep }) {
+function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSolicitud, previousStep, onFinish }) {
 
+    const BienServiciodata = useBienServicio()
 
     const handleModalidad = ({ target }) => {
+        console.log(target.value)
         const value = target.value
         setModalidadState(value)
     }
+
 
     return (
         <div>
@@ -20,7 +24,7 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                     <label>Tipo de modalidad</label>
                     <div className='flex items-center justify-center'>
                         <Form.Item name="modalidad" rules={[{ required: true, message: 'Por favor seleccione una modalidad' }]} className=' w-2/2 mb-0 flex gap-3'>
-                            <Radio.Group defaultValue={2} onChange={handleModalidad}>
+                            <Radio.Group onChange={handleModalidad}>
                                 <Space direction="horizontal">
                                     <Radio value={1}>Con solped</Radio>
                                     <Radio value={2}>Sin Solped</Radio>
@@ -56,7 +60,7 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                         </div>
                     }
                     {
-                        modalidadState !== 1 &&
+                        modalidadState && modalidadState === 2 &&
                         <div className='flex flex-col gap-2'>
                             <div className='grid grid-cols-2 w-full items-center'>
                                 <p>
@@ -77,9 +81,11 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                                     </p>
                                     <Form.Item name="bienServicio" rules={[{ required: true, message: 'Por favor ingrese el bien o servicio' }]} className='mb-0'>
                                         <Select placeholder="Bien o servicio" >
-                                            <Select.Option value="1">Bien o servicio 1</Select.Option>
-                                            <Select.Option value="2">Bien o servicio 2</Select.Option>
-                                            <Select.Option value="3">Bien o servicio 3</Select.Option>
+                                            {
+                                                BienServiciodata.data?.map((item, index) => (
+                                                    <Select.Option key={index} value={item.iD_Bien_Servicio}>{item.bien_Servicio}</Select.Option>
+                                                ))
+                                            }
                                         </Select>
                                     </Form.Item>
                                 </div>
@@ -148,7 +154,7 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
             </div>
             <div className='w-full flex justify-between items-center'>
                 <Button onClick={previousStep} type="primary">Atras</Button>
-                <Button onClick={nextStep} type="primary">Siguiente</Button>
+                <Button onClick={() => onFinish()} type="primary">Siguiente</Button>
             </div>
 
         </div>

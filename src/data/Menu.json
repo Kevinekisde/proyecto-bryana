@@ -65,6 +65,7 @@
                 "name": "Detalle recepción OC",
                 "url": "/detail-reception"
             }
-        ]
+        ],
+        "user": "admin"
     }
 ]

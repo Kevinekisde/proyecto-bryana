@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
-import Providers from '../../../service/Providers'
+import OrdentEstadistica from '../../../service/OrdenEstadistica'
+import useCentroCosto from '../../../hooks/useCentroCosto'
 
 const Create = ({ refetch }) => {
 
@@ -9,12 +10,20 @@ const Create = ({ refetch }) => {
 
     const [modal, setModal] = useState(false)
 
+
+    const { data, isLoading, isSuccess, isError, error } = useCentroCosto()
+
     const onFinish = values => {
 
         setLoading(true)
         try {
+            const id = data.find(item => item.nombre == values.Centro_de_Costo).id_Ceco
 
-            Providers.post(values)
+            OrdentEstadistica.create({
+                ...values,
+                Id_Centro_de_Costo: id.toString(),
+                activado: true
+            })
                 .then((response) => {
                     setLoading(false)
                     setModal(false)
@@ -70,35 +79,22 @@ const Create = ({ refetch }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="Codigo_Nave"
-                        rules={[{
-                            required: true,
-                            message: 'Ingrese Codigo'
-                        }]}
-                    >
-                        <Input
-                            placeholder="Codigo"
-                            disabled={loading}
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        className="mb-2"
                         name="Centro_de_Costo"
                         rules={[{
                             required: true,
                             message: 'Ingrese Centro de Costo'
                         }]}
                     >
-                        <Input
-                            placeholder="Centro de Costo"
-                            disabled={loading}
-                        />
+                        <Select placeholder="Centro de Costo" disabled={loading} showSearch>
+                            {data.map((item, index) => (
+                                <Select.Option key={index} value={item.nombre}>{item.nombre}</Select.Option>
+                            ))}
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
                         className="mb-2"
-                        name="id_Orden_Compra"
+                        name="Codigo_oe"
                         rules={[{
                             required: true,
                             message: 'Ingrese Orden de Compra'

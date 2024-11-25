@@ -54,7 +54,7 @@ function Providers() {
 
     if (user.isAdmin) {
         columns.push({
-            title: 'Editar', key: 'edit', align: 'left', responsive: ['md'], render: (text, record) => <Update proveedor={record} />
+            title: 'Editar', key: 'edit', align: 'left', responsive: ['md'], render: (text, record) => <Update proveedor={record} refetch={refetch} />
         },)
     }
 

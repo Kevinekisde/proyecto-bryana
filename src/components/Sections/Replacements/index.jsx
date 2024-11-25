@@ -7,13 +7,21 @@ import Search from './Search'
 import Table from '../../Template/Table'
 import Create from './Create'
 import Actions from './Actions'
+import useAuthContext from '../../../hooks/useAuthContext'
+import useRemplazos from '../../../hooks/useRemplazos'
+import { render } from 'react-dom'
 
 function Remplazos() {
+
+
+    const { user } = useAuthContext()
 
     const [search, setSearch] = useState({
         data: [],
         user: ''
     })
+
+    const { data, isLoading, isSuccess, refetch } = useRemplazos()
 
 
     const handleSearch = e => {
@@ -27,23 +35,30 @@ function Remplazos() {
 
     const columns = [
         {
-            title: 'En Vacaciones', dataIndex: 'vacations', key: 'vacations', align: 'left',
+            title: 'En Vacaciones', dataIndex: 'id_Usuario_Vacaciones', key: 'id_Usuario_Vacaciones', align: 'left',
         },
         {
-            title: 'Reemplazante', dataIndex: 'replacer', key: 'replacer', align: 'left',
+            title: 'Reemplazante', dataIndex: 'id_Usuario_Reemplazante', key: 'id_Usuario_Reemplazante', align: 'left',
         },
         {
-            title: 'Comentario', dataIndex: 'comment', key: 'comment', align: 'center',
+            title: 'Comentario', dataIndex: 'comentario', key: 'comentario', align: 'center',
         },
         {
-            title: 'Fecha Retorno', dataIndex: 'end_date', key: 'end_date', align: 'center',
-        },
-        {
-            title: 'Acciones', dataIndex: 'actions', key: 'actions', align: 'center', render: (text, record) => (
-                <Actions reemplazo={record} />
-            )
+            title: 'Fecha Retorno', dataIndex: 'fecha_Retorno', key: 'fecha_Retorno', align: 'center', render: (text, record) => {
+                return (
+                    <div>
+                        {new Date(record.fecha_Retorno).toLocaleDateString()}
+                    </div>
+                )
+            }
         }
     ]
+
+    if (user.isAdmin) {
+        columns.push({
+            title: 'Acciones', key: 'edit', align: 'center', render: (text, record) => <Actions Reemplazo={record} />
+        })
+    }
 
     return (
         <div>
@@ -71,14 +86,17 @@ function Remplazos() {
                 <div className="flex-1 order-1">
                 </div>
                 <div className="flex gap-x-2 order-2">
-                    <Create />
+                    {
+                        user.isAdmin &&
+                        <Create refetch={refetch} />
+                    }
                 </div>
                 <Search onChange={handleSearch} />
             </div>
 
             <Table
                 columns={columns}
-                data={isNotEmpty(search.user) ? search.data : ReemplazosData}
+                data={isSuccess ? (isNotEmpty(search.user) ? search.data : data) : []}
             />
 
         </div>

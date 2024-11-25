@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
 import Providers from '../../../service/Providers'
 import { EditOutlined, LoadingOutlined } from '@ant-design/icons'
+import useUsers from '../../../hooks/useUsers'
+import Departamento from '../../../service/Departaments'
 
-const Update = ({ departamento }) => {
+const Update = ({ departamento, refetch }) => {
 
-
+    const { data, isLoading, isSuccess } = useUsers()
 
     const [form] = Form.useForm()
 
@@ -14,13 +16,21 @@ const Update = ({ departamento }) => {
 
     const [modal, setModal] = useState(false)
 
-    const onFinish = values => {
+    const onFinish = () => {
+
 
         setLoading(true)
         try {
 
-            Providers.post(values)
+            const dataValues = {
+                ...form.getFieldsValue(),
+                Id_Departamento: departamento.id_Departamento,
+                Encargado: typeof (form.getFieldValue('Encargado')) == 'string' ? departamento.id_Encargado.toString() : form.getFieldValue('Encargado').toString()
+            }
+
+            Departamento.update(departamento.id_Departamento, dataValues)
                 .then((response) => {
+                    console.log(response)
                     setLoading(false)
                     setModal(false)
                     alertSuccess({ message: `Departamento creado con éxito` })
@@ -28,6 +38,7 @@ const Update = ({ departamento }) => {
                 })
 
         } catch (e) {
+            console.log(e)
             setLoading(false)
             setModal(false)
         }
@@ -35,7 +46,11 @@ const Update = ({ departamento }) => {
 
     useEffect(() => {
         if (modal) {
-            form.setFieldsValue(departamento)
+            form.setFieldsValue({
+                Nombre: departamento.nombre,
+                Descripcion: departamento.descripcion,
+                Encargado: departamento.encargado
+            })
         }
     }, [modal, departamento])
 
@@ -100,10 +115,9 @@ const Update = ({ departamento }) => {
                             message: 'Ingrese Encargado'
                         }]}
                     >
-                        <Input
-                            placeholder="Encargado"
-                            disabled={loading}
-                        />
+                        <Select placeholder="Encargado" disabled={loading}>
+                            {data.filter(user => user.activado == true).map((user) => <Select.Option key={user.nombre_Completo} value={user.id_Usuario}>{user.nombre_Completo}</Select.Option>)}
+                        </Select>
                     </Form.Item>
 
                     <Button
@@ -114,7 +128,7 @@ const Update = ({ departamento }) => {
                         disabled={loading}
                         block={true}
                     >
-                        Editar
+                        Guardar
                     </Button>
 
                 </Form>

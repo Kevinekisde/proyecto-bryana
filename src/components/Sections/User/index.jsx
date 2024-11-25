@@ -6,8 +6,16 @@ import Search from './Search'
 import { normalizeText } from '../../../utils/paragraph'
 import { isNotEmpty } from '../../../utils/validations'
 import Create from './Create'
+import useAuthContext from '../../../hooks/useAuthContext'
+import useUsers from '../../../hooks/useUsers'
+import Edit from './Edit'
 
 function Usuarios() {
+
+    const { user } = useAuthContext()
+
+
+    const { data, isLoading, isSuccess, refetch } = useUsers()
 
     const [search, setSearch] = useState({
         data: [],
@@ -15,9 +23,11 @@ function Usuarios() {
     })
 
 
+    console.log(data)
+
     const handleSearch = e => {
         const user = normalizeText(e.target.value)
-        const result = UsuariosData.filter(t => normalizeText(t.Nombre_Usuario).includes(user) || normalizeText(t.Apellido_Paterno).includes(user) || normalizeText(t.Apellido_Materno).includes(user) || normalizeText(t.Correo_Usuario).includes(user) || normalizeText(t.Departamento).includes(user) || normalizeText(t.rol).includes(user) || normalizeText(t.Centro_Costo).includes(user))
+        const result = data.filter(t => normalizeText(t.Nombre_Usuario).includes(user) || normalizeText(t.Apellido_Paterno).includes(user) || normalizeText(t.Apellido_Materno).includes(user) || normalizeText(t.Correo_Usuario).includes(user) || normalizeText(t.Departamento).includes(user) || normalizeText(t.rol).includes(user) || normalizeText(t.Centro_Costo).includes(user))
         setSearch({
             data: result,
             user
@@ -27,15 +37,28 @@ function Usuarios() {
 
     const columns = [
         {
-            title: 'Nombre', dataIndex: 'nombre', key: 'name', align: 'left', responsive: ['md'], render: (text, record) =>
-                <p>
-                    {record.Nombre_Usuario} {record.Apellido_Paterno} {record.Apellido_Materno}`
-                </p>
+            title: 'ID', dataIndex: 'id_Usuario', key: 'id_Usuario', align: 'left', responsive: ['md'],
         },
-        { title: 'Correo', dataIndex: 'Correo_Usuario', key: 'Correo_Usuario', align: 'left', responsive: ['md'] },
-        { title: 'Departamento', dataIndex: 'Departamento', key: 'Departamento', align: 'center', responsive: ['md'] },
-        { title: 'Rol', dataIndex: 'rol', key: 'rol', align: 'center', responsive: ['md'] },
-        { title: 'Centro de costos', dataIndex: 'Centro_Costo', key: 'Centro_Costo', align: 'center', responsive: ['md'] },
+        {
+            title: 'Nombre', dataIndex: 'nombre_Usuario', key: 'name', align: 'left', responsive: ['md'],
+        },
+        { title: 'Correo', dataIndex: 'correo_Usuario', key: 'correo_Usuario', align: 'left', responsive: ['md'] },
+        // { title: 'Departamento', dataIndex: 'Departamento', key: 'Departamento', align: 'center', responsive: ['md'] },
+        {
+            title: 'Rol', dataIndex: 'rol', key: 'rol', align: 'center', responsive: ['md'], render: (text, record) => {
+                return (
+                    <div>
+                        {record.admin == true ? 'Administrador' : 'Usuario'}
+                    </div>
+                )
+            }
+        },
+        {
+            title: 'Editar', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => {
+                return <Edit user={record} refetch={refetch} />
+            }
+        }
+        // { title: 'Centro de costos', dataIndex: 'Centro_Costo', key: 'Centro_Costo', align: 'center', responsive: ['md'] },
     ]
 
 
@@ -64,14 +87,17 @@ function Usuarios() {
                 <div className="flex-1 order-1">
                 </div>
                 <div className="flex gap-x-2 order-2">
-                    <Create />
+                    {
+                        user.isAdmin &&
+                        <Create refetch={refetch} />
+                    }
                 </div>
                 <Search onChange={handleSearch} />
             </div>
 
             <Table
                 columns={columns}
-                data={isNotEmpty(search.user) ? search.data : UsuariosData}
+                data={isSuccess ? (isNotEmpty(search.user) ? search.data : data) : []}
             />
         </div>
     )

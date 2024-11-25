@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal, Form, Input } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
-import Providers from '../../../service/Providers'
+import CentroCosto from '../../../service/CentroCosto'
 
 const Create = ({ refetch }) => {
 
@@ -14,7 +14,7 @@ const Create = ({ refetch }) => {
         setLoading(true)
         try {
 
-            Providers.post(values)
+            CentroCosto.create(values)
                 .then((response) => {
                     setLoading(false)
                     setModal(false)

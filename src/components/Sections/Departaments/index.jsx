@@ -7,17 +7,26 @@ import Actions from './Actions'
 import Search from './Search'
 import { normalizeText } from '../../../utils/paragraph'
 import { isNotEmpty } from '../../../utils/validations'
+import useAuthContext from '../../../hooks/useAuthContext'
+import useDepartament from '../../../hooks/useDepartament'
 
 function Departaments() {
+
+    const { user } = useAuthContext()
+
+    const { data, isLoading, isSuccess, refetch } = useDepartament()
+
+    console.log(data)
 
     const [search, setSearch] = useState({
         data: [],
         departament: ''
     })
 
+
     const handleSearch = e => {
         const departament = normalizeText(e.target.value)
-        const result = DepartamentosData.filter(u => normalizeText(u.Nombre).includes(departament) || normalizeText(u.Descripcion).includes(departament) || normalizeText(u.Encargado).includes(departament))
+        const result = data.filter(u => normalizeText(u.id_Departamento.toString()).includes(departament) || normalizeText(u.nombre).includes(departament) || normalizeText(u.descripcion).includes(departament) || normalizeText(u.encargado).includes(departament))
         setSearch({
             data: result,
             departament
@@ -26,14 +35,17 @@ function Departaments() {
 
     const columns = [
         { title: 'Id', dataIndex: 'id_Departamento', key: 'id_Departamento', align: 'left', responsive: ['md'] },
-        { title: 'Nombre', dataIndex: 'Nombre', key: 'Nombre', align: 'left', responsive: ['md'] },
-        { title: 'Descripcion', dataIndex: 'Descripcion', key: 'Descripcion', align: 'center' },
-        { title: 'Encargado', dataIndex: 'Encargado', key: 'Encargado', align: 'center' },
-        {
-            title: 'Acciones', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => <Actions departamento={record} />
-        },
-
+        { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', align: 'left', responsive: ['md'] },
+        { title: 'Descripcion', dataIndex: 'descripcion', key: 'descripcion', align: 'center' },
+        { title: 'Encargado', dataIndex: 'encargado', key: 'encargado', align: 'center' },
     ]
+
+    if (user.isAdmin == true) {
+        columns.push({
+            title: 'Acciones', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => <Actions departamento={record} refetch={refetch} />
+        })
+    }
+
     return (
         <div>
             <Breadcrumb
@@ -57,13 +69,16 @@ function Departaments() {
 
                 </div>
                 <div className="flex gap-x-2 order-2">
-                    <Create />
+                    {
+                        user.isAdmin &&
+                        <Create refetch={refetch} />
+                    }
                 </div>
                 <Search onChange={handleSearch} />
             </div>
             <Table
                 columns={columns}
-                dataSource={isNotEmpty(search.departament) ? search.data : DepartamentosData}
+                dataSource={isSuccess ? (isNotEmpty(search.departament) ? search.data : data) : []}
                 rowKey='id_Departamento'
             />
         </div>

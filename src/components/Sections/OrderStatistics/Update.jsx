@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
 import Providers from '../../../service/Providers'
 import { EditOutlined, LoadingOutlined } from '@ant-design/icons'
+import useCentroCosto from '../../../hooks/useCentroCosto'
+import OrdentEstadistica from '../../../service/OrdenEstadistica'
 
-const Update = ({ order }) => {
+const Update = ({ order, refetch }) => {
+
+    const { data, isLoading, isSuccess, isError, error } = useCentroCosto()
 
     const [form] = Form.useForm()
 
@@ -13,19 +17,25 @@ const Update = ({ order }) => {
     const [modal, setModal] = useState(false)
 
     const onFinish = values => {
-
         setLoading(true)
         try {
-
-            Providers.post(values)
+            const id = data.find(item => item.nombre == form.getFieldValue('Centro_de_Costo')).id_Ceco
+            OrdentEstadistica.update(order.id_Orden_Estadistica, {
+                Nombre: form.getFieldValue('Nombre'),
+                Id_Centro_de_Costo: id.toString(),
+                codigo_OE: form.getFieldValue('codigo_OE'),
+                Id_Orden_Estadistica: order.id_Orden_Estadistica
+            })
                 .then((response) => {
                     setLoading(false)
                     setModal(false)
                     alertSuccess({ message: `Orden Actualizada con éxito` })
+                    refetch()
 
                 })
 
         } catch (e) {
+            console.log(e)
             setLoading(false)
             setModal(false)
         }
@@ -33,7 +43,11 @@ const Update = ({ order }) => {
 
     useEffect(() => {
         if (modal) {
-            form.setFieldsValue(order)
+            form.setFieldsValue({
+                Nombre: order.nombre,
+                codigo_OE: order.codigo_OE,
+                Centro_de_Costo: order.id_Centro_de_Costo
+            })
         }
     }, [modal, order])
 
@@ -78,35 +92,22 @@ const Update = ({ order }) => {
 
                     <Form.Item
                         className="mb-2"
-                        name="Codigo_Nave"
-                        rules={[{
-                            required: true,
-                            message: 'Ingrese Codigo'
-                        }]}
-                    >
-                        <Input
-                            placeholder="Codigo"
-                            disabled={loading}
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        className="mb-2"
                         name="Centro_de_Costo"
                         rules={[{
                             required: true,
                             message: 'Ingrese Centro de Costo'
                         }]}
                     >
-                        <Input
-                            placeholder="Centro de Costo"
-                            disabled={loading}
-                        />
+                        <Select placeholder="Centro de Costo" disabled={loading} showSearch>
+                            {isSuccess && data.map((item, index) => (
+                                <Select.Option key={index} value={item.nombre}>{item.nombre}</Select.Option>
+                            ))}
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
                         className="mb-2"
-                        name="id_Orden_Compra"
+                        name="codigo_OE"
                         rules={[{
                             required: true,
                             message: 'Ingrese Orden de Compra'

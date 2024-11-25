@@ -1,13 +1,19 @@
 import { Breadcrumb, Table } from 'antd'
 import React, { useState } from 'react'
-import OrdenEstadisticaData from '../../../data/OrdenEstadistica.json'
 import Actions from './Actions'
 import Create from './Create'
 import Search from './Search'
 import { normalizeText } from '../../../utils/paragraph'
 import { isNotEmpty } from '../../../utils/validations'
+import useAuthContext from '../../../hooks/useAuthContext'
+import useOrdenesEstadisticas from '../../../hooks/useOrdenesEstadisticas'
 
 function OrderStatistics() {
+
+
+    const { user } = useAuthContext()
+
+    const { data, isLoading, isSuccess, isError, error, refetch } = useOrdenesEstadisticas()
 
     const [search, setSearch] = useState({
         data: [],
@@ -16,7 +22,7 @@ function OrderStatistics() {
 
     const handleSearch = e => {
         const order = normalizeText(e.target.value)
-        const result = OrdenEstadisticaData.filter(u => normalizeText(u.Nombre).includes(order) || normalizeText(u.Codigo_Nave).includes(order) || normalizeText(u.Centro_de_Costo).includes(order))
+        const result = data.filter(u => normalizeText(u.id_Orden_Estadistica.toString()).includes(order) || normalizeText(u.nombre).includes(order) || normalizeText(u.id_Centro_de_Costo).includes(order) || normalizeText(u.codigo_OE).includes(order))
 
         setSearch({
             data: result,
@@ -25,15 +31,21 @@ function OrderStatistics() {
     }
 
     const columns = [
-        { title: 'Id', dataIndex: 'id_Orden_Estadistica', key: 'id_Orden_Estadistica', align: 'left', responsive: ['md'] },
-        { title: 'Nombre', dataIndex: 'Nombre', key: 'Nombre', align: 'left', responsive: ['md'] },
-        { title: 'Codigo', dataIndex: 'Codigo_Nave', key: 'Codigo_Nave', align: 'center' },
-        { title: 'Centro de costo', dataIndex: 'Centro_de_Costo', key: 'Centro_de_Costo', align: 'center' },
-        { title: 'Orden Compra', dataIndex: 'id_Orden_Compra', key: 'id_Orden_Compra', align: 'center' },
-        {
-            title: 'Acciones', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => <Actions order={record} />
-        },
+        { title: 'Id', dataIndex: 'id_Orden_Estadistica', key: 'id_Orden_Estadistica', align: 'left', responsive: ['md'], defaultSortOrder: 'ascend', sorter: (a, b) => a.id_Orden_Estadistica - b.id_Orden_Estadistica },
+        { title: 'Nombre', dataIndex: 'nombre', key: 'nombre', align: 'left', responsive: ['md'] },
+        { title: 'Centro de costo', dataIndex: 'id_Centro_de_Costo', key: 'id_Centro_de_Costo', align: 'center' },
+        { title: 'Orden Compra', dataIndex: 'codigo_OE', key: 'codigo_OE', align: 'center' },
+
     ]
+
+    if (user.isAdmin) {
+        columns.push(
+            {
+                title: 'Acciones', key: 'edit', align: 'center', responsive: ['md'], render: (text, record) => <Actions order={record} refetch={refetch} />
+            }
+        )
+    }
+
     return (
         <div>
             <Breadcrumb
@@ -58,14 +70,21 @@ function OrderStatistics() {
                     <p className="text-sm text-[#556a89]">Listado de Ordenes Estadisticas</p>
                 </div>
                 <div className="flex gap-x-2 order-2">
-                    <Create />
+                    {
+                        user.isAdmin &&
+                        <Create refetch={refetch} />
+                    }
                 </div>
                 <Search onChange={handleSearch} />
             </div>
             <Table
                 columns={columns}
-                dataSource={isNotEmpty(search.order) ? search.data : OrdenEstadisticaData}
+                dataSource={isSuccess ? (isNotEmpty(search.order) ? search.data : data) : []}
                 rowKey='id_Orden_Estadistica'
+                pagination={{ pageSize: 10, showSizeChanger: false }}
+                showSorterTooltip={true}
+                sortDirections={['ascend', 'descend']}
+                key={'id_Orden_Estadistica'}
             />
 
         </div>

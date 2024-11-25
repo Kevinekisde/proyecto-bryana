@@ -1,7 +1,6 @@
 import { Breadcrumb, Button } from 'antd'
 import React, { useState } from 'react'
 import Table from '../../Template/Table'
-import Tickets from '../../../data/TicketsOc.json'
 import { BiCheck, BiCheckDouble, BiX } from 'react-icons/bi'
 import StatusText from '../../Template/StatusText'
 import { navigate } from 'gatsby'
@@ -13,11 +12,13 @@ import Search from './Search'
 import { isNotEmpty } from '../../../utils/validations'
 import Excel from './Excel'
 import { FaEye } from 'react-icons/fa'
+import useRequestOC from '../../../hooks/useRequestOC'
 
 function RequestOC() {
 
     const { user } = useAuthContext()
 
+    const { data, isLoading, isSuccess, isError } = useRequestOC()
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [search, setSearch] = useState({
@@ -25,10 +26,11 @@ function RequestOC() {
         ticket: ''
     })
 
+
     const handleSearch = e => {
 
         const ticket = normalizeText(e.target.value)
-        const result = Tickets.filter(t => normalizeText(t.oc).includes(ticket) || normalizeText(t.type).includes(ticket) || normalizeText(t.status).includes(ticket) || normalizeText(t.oc).includes(ticket) || normalizeText(t.provider).includes(ticket))
+        const result = data.filter(t => normalizeText(t.oc).includes(ticket) || normalizeText(t.type).includes(ticket) || normalizeText(t.status).includes(ticket) || normalizeText(t.oc).includes(ticket) || normalizeText(t.provider).includes(ticket))
         setSearch({
             data: result,
             ticket
@@ -38,13 +40,17 @@ function RequestOC() {
 
 
     const columns = [
-        { title: 'Nº Ticket', dataIndex: 'ticket', key: 'name', align: 'left', responsive: ['md'] },
-        { title: 'Tipo de solicitud', dataIndex: 'type', key: 'type', align: 'left', responsive: ['md'] },
-        { title: 'Estado', dataIndex: 'status', key: 'status', align: 'center', render: (text, record) => <StatusText status={record.status} /> },
-        { title: 'Fecha', dataIndex: 'fecha', key: 'date', align: 'center', responsive: ['md'] },
-        { title: 'Nº Solped', dataIndex: 'solped', key: 'solped', align: 'center' },
-        { title: 'Nº OC', dataIndex: 'oc', key: 'oc', align: 'center' },
-        { title: 'Proveedor', dataIndex: 'provider', key: 'provider', align: 'center' },
+        { title: 'Nº Ticket', dataIndex: 'iD_Ticket', key: 'iD_Ticket', align: 'left', responsive: ['md'] },
+        // { title: 'Tipo de solicitud', dataIndex: 'type', key: 'type', align: 'left', responsive: ['md'] },
+        { title: 'Estado', dataIndex: 'estado', key: 'estado', align: 'center', render: (text, record) => <StatusText status={record.estado} /> },
+        { title: 'Fecha', dataIndex: 'fecha_Creacion_OC', key: 'fecha_Creacion_OC', align: 'center', responsive: ['md'], render: (text, record) => new Date(record.fecha_Creacion_OC).toLocaleDateString() },
+        {
+            title: 'Nº Solped', dataIndex: 'solped', key: 'solped', align: 'center', render: (text, record) => {
+                return record.solped == 0 ? 'Sin Solped' : record.solped
+            }
+        },
+        { title: 'Nº OC', dataIndex: 'id_OE', key: 'id_OE', align: 'center' }, // Falta Numero de id
+        { title: 'Proveedor', dataIndex: 'iD_Proveedor', key: 'iD_Proveedor', align: 'center' }, // Falta Numero de id
         { title: 'Detalle', dataIndex: 'detalle', key: 'detail', align: 'center' },
         {
             title: 'Recepcion', key: 'recepcion', align: 'center', render: (text, record) => {
@@ -84,34 +90,39 @@ function RequestOC() {
         {
             title: 'Acciones', key: 'actions', align: 'center', render: (text, record) => <Actions Solicitud={record} />
         },
-        {
-            title: 'Seleccionar',
-            key: 'selection',
-            align: 'center',
-            render: (text, record) => {
-                return (
-                    <div className='flex justify-center gap-2'>
-                        {
-                            record.status == 'Espera liberacion' &&
-                            <Button
-                                className='px-2'
-                                onClick={() => {
-                                    const selected = selectedRowKeys.includes(record.ticket)
-                                    if (selected) {
-                                        setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.ticket))
-                                    } else {
-                                        setSelectedRowKeys([...selectedRowKeys, record.ticket])
-                                    }
-                                }}
-                            >
-                                {selectedRowKeys.includes(record.ticket) ? <BiCheck /> : <BiX />}
-                            </Button>
-                        }
-                    </div>
-                )
-            }
-        }
     ]
+
+    if (user.isAdmin) {
+        columns.push(
+            {
+                title: 'Seleccionar',
+                key: 'selection',
+                align: 'center',
+                render: (text, record) => {
+                    return (
+                        <div className='flex justify-center gap-2'>
+                            {
+                                record.status == 'Espera liberacion' &&
+                                <Button
+                                    className='px-2'
+                                    onClick={() => {
+                                        const selected = selectedRowKeys.includes(record.ticket)
+                                        if (selected) {
+                                            setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.ticket))
+                                        } else {
+                                            setSelectedRowKeys([...selectedRowKeys, record.ticket])
+                                        }
+                                    }}
+                                >
+                                    {selectedRowKeys.includes(record.ticket) ? <BiCheck /> : <BiX />}
+                                </Button>
+                            }
+                        </div>
+                    )
+                }
+            }
+        )
+    }
 
 
     return (
@@ -149,7 +160,7 @@ function RequestOC() {
 
             <Table
                 columns={columns}
-                data={isNotEmpty(search.ticket) ? search.data : Tickets}
+                data={isLoading && isNotEmpty(search.ticket) ? search.data : data}
                 ActiverowSelection
                 selectedRowKeys={selectedRowKeys}
                 setSelectedRowKeys={setSelectedRowKeys}

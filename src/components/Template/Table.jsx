@@ -16,7 +16,8 @@ const Table = ({ columns, loading, data, ActiverowSelection, selectedRows, setSe
                 pagination={{
                     position: ['bottomCenter'],
                     pageSize: 15,
-                    size: 'default'
+                    size: 'default',
+                    showSizeChanger: false,
                 }}
                 locale={{ emptyText: false ? 'Cargando' : 'No se han encontrado registros' }}
                 scroll={{ y: isNaN(height) ? 200 : height - 90 }}

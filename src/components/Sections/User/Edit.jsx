@@ -1,34 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Input, Select } from 'antd'
 import { alertSuccess } from '../../../utils/alert'
+import { EditOutlined, LoadingOutlined, LockOutlined } from '@ant-design/icons'
 import User from '../../../service/User'
 
-const Create = ({ refetch }) => {
+const Update = ({ user, refetch }) => {
+
+    console.log(user)
+
+    const [form] = Form.useForm()
 
     const [loading, setLoading] = useState(false)
 
     const [modal, setModal] = useState(false)
 
     const onFinish = values => {
+
         setLoading(true)
         try {
-
-
-            User.post({
+            User.update(user.id_Usuario, {
                 ...values,
-                en_Vacaciones: values.en_Vacaciones === '1' ? true : false,
-                admin: values.rol === '1' ? true : false
+                id_Usuario: user.id_Usuario,
+                en_Vacaciones: values.en_Vacaciones == '0' ? false : true,
+                admin: values.rol == '0' ? false : true,
+                Activado: true,
             })
                 .then((response) => {
                     setLoading(false)
                     setModal(false)
-                    alertSuccess({ message: `Usuario creado con éxito` })
+                    alertSuccess({ message: `Usuario Actualizada con éxito` })
                     refetch()
-                })
-                .catch((error) => {
-                    setLoading(false)
-                    setModal(false)
-                    console.log(error)
                 })
 
         } catch (e) {
@@ -38,18 +39,31 @@ const Create = ({ refetch }) => {
         }
     }
 
+    useEffect(() => {
+        if (modal) {
+            form.setFieldsValue({
+                ...user,
+                nombre_usuario: user.nombre_Usuario,
+                Rut_Usuario: user.rut_Usuario,
+                Correo_Usuario: user.correo_Usuario,
+                en_Vacaciones: user.en_Vacaciones == false ? '0' : '1',
+                rol: user.admin == false ? '0' : '1',
+            })
+        }
+    }, [modal, user])
+
     return (
         <div>
             <Button
-                className="px-5"
+                className="px-2"
                 onClick={() => setModal(true)}
             >
-                Agregar
+                {loading ? <LoadingOutlined /> : <EditOutlined twoToneColor="#52c41a" />}
             </Button>
 
             {modal && <Modal
                 open={modal}
-                title="Agregar Usuario"
+                title="Editar Usuario"
                 centered
                 zIndex={3000}
                 closable={true}
@@ -61,7 +75,7 @@ const Create = ({ refetch }) => {
                 width={600}
             >
 
-                <Form name="create" onFinish={onFinish} preserve={false} className="pt-4 pb-2">
+                <Form form={form} name="edit" onFinish={onFinish} preserve={false} className="pt-4 pb-2">
 
                     <Form.Item
                         className="mb-2"
@@ -155,11 +169,8 @@ const Create = ({ refetch }) => {
                         }]}
 
                     >
-                        <Input
-                            type='password'
-                            placeholder="Contraseña"
-                            disabled={loading}
-                        />
+                        <Input placeholder="Contraseña" disabled={loading} >
+                        </Input>
                     </Form.Item>
 
                     <Form.Item
@@ -199,13 +210,13 @@ const Create = ({ refetch }) => {
                         disabled={loading}
                         block={true}
                     >
-                        Crear
+                        Guardar
                     </Button>
 
                 </Form>
             </Modal>}
-        </div >
+        </div>
     )
 }
 
-export default Create
+export default Update

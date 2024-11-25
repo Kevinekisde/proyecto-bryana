@@ -9,6 +9,8 @@ function Delete({ departamento }) {
     const [loading, setLoading] = useState(false)
     const [modal, setModal] = useState(false)
 
+    
+
     return (
         <div>
 
