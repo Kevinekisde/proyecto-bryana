@@ -4,6 +4,7 @@ import React from "react";
 import SignIn from "../components/Auth/SignIn";
 import Dashboard from "../pages/dashboard";
 import User from "../service/User";
+import LoadingComponent from "../components/Template/Loading";
 
 
 const AuthProvider = ({ children }) => {
@@ -50,18 +51,19 @@ const AuthProvider = ({ children }) => {
 
         }
 
-        setLoading(false);
-
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
 
     }, [authIsSuccess])
 
 
+    console.log(loading);
+
     return (
         <AuthContext.Provider value={{ isSignedIn, setIsSignedIn, user, authIsSuccess }}>
             {
-                loading ? <div>
-                    <h1>Cargando...</h1>
-                </div> : <>
+                loading ? <LoadingComponent /> : <>
                     {children}
                 </>
             }

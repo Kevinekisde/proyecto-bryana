@@ -13,7 +13,7 @@ function Request() {
 
     const { user } = useAuthContext()
 
-    const { data, isLoading, isError, error, isSuccess } = useRequest()
+    const { data, isLoading, isError, error, isSuccess, refetch } = useRequest()
 
     const [search, setSearch] = useState({
         data: [],
@@ -44,10 +44,10 @@ function Request() {
                 return record.solped == 0 ? 'Sin solped' : record.solped
             }
         },
-        { title: 'Detalle', dataIndex: 'detalle', key: 'detail', align: 'center' },
+        { title: 'Detalle', dataIndex: 'detalle', key: 'detail', align: 'center', render: (text, record) => record.solped != 0 ? 'Sin detalle' : record.detalle },
         { title: 'Bien/Servicio', dataIndex: 'iD_Bien_Servicio', key: 'bien_servicio', align: 'center' },
         {
-            title: 'Acciones', dataIndex: 'actions', key: 'actions', align: 'center', render: (text, record) => <Actions Solicitud={record} />
+            title: 'Acciones', dataIndex: 'actions', key: 'actions', align: 'center', render: (text, record) => <Actions Solicitud={record} refetch={refetch} />
         },
     ]
 

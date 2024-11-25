@@ -4,6 +4,9 @@ import Dragger from 'antd/es/upload/Dragger'
 import React, { useState } from 'react'
 import { InboxOutlined } from '@ant-design/icons'
 import useBienServicio from '../../hooks/useBienServicio'
+import useProviders from '../../hooks/useProviders'
+import useOrdenesEstadisticas from '../../hooks/useOrdenesEstadisticas'
+import Archivo from '../../service/Archivo'
 
 function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSolicitud, previousStep, onFinish }) {
 
@@ -13,6 +16,44 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
         console.log(target.value)
         const value = target.value
         setModalidadState(value)
+    }
+
+    const Providers = useProviders()
+
+    const OrdenesEstadisticas = useOrdenesEstadisticas()
+
+    function readFileDataAsBase64(e) {
+        const file = e.target.files[0];
+
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                resolve(event.target.result);
+            };
+
+            reader.onerror = (err) => {
+                reject(err);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    const changeFileToByteArray = async (file) => {
+
+        const fileByte = await readFileDataAsBase64(file)
+
+
+        Archivo.post({
+            NombreDocumento: file.name,
+            ArchivoDoc: fileByte,
+        }).then(response => {
+            console.log(response)
+
+        })
+            .catch(error => console.log(error))
     }
 
 
@@ -46,18 +87,37 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                     }
                     {
                         tipoSolicitud === 1 && modalidadState === 1 &&
-                        <div className='grid grid-cols-2 w-full items-center'>
-                            <p>
-                                Proveedor:
-                            </p>
-                            <Form.Item name="proveedor" rules={[{ required: true, message: 'Por favor ingrese el proveedor' }]} className='mb-0'>
-                                <Select placeholder="Proveedor" >
-                                    <Select.Option value="1">Proveedor 1</Select.Option>
-                                    <Select.Option value="2">Proveedor 2</Select.Option>
-                                    <Select.Option value="3">Proveedor 3</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </div>
+                        <>
+                            <div className='grid grid-cols-2 w-full items-center'>
+                                <p>
+                                    Proveedor:
+                                </p>
+                                <Form.Item name="proveedor" rules={[{ required: true, message: 'Por favor ingrese el proveedor' }]} className='mb-0'>
+                                    <Select placeholder="Proveedor" >
+                                        {
+                                            Providers.data?.map((item, index) => (
+                                                <Select.Option key={index} value={item.iD_Proveedores}>{item.razon_Social}</Select.Option>
+                                            ))
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </div>
+
+                            <div className='grid grid-cols-2 w-full items-center'>
+                                <p>
+                                    Orden estadistica
+                                </p>
+                                <Form.Item name="ordenEstadistica" rules={[{ required: true, message: 'Por favor ingrese la orden estadistica' }]} className='mb-0'>
+                                    <Select placeholder="Orden estadistica" >
+                                        {
+                                            OrdenesEstadisticas.data?.map((item, index) => (
+                                                <Select.Option key={index} value={item.id_Orden_Estadistica}>{item.nombre}</Select.Option>
+                                            ))
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </div>
+                        </>
                     }
                     {
                         modalidadState && modalidadState === 2 &&
@@ -102,9 +162,11 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                                         </p>
                                         <Form.Item name="ordenEstadistica" rules={[{ required: true, message: 'Por favor ingrese la orden estadistica' }]} className='mb-0'>
                                             <Select placeholder="Orden estadistica" >
-                                                <Select.Option value="1">Orden 1</Select.Option>
-                                                <Select.Option value="2">Orden 2</Select.Option>
-                                                <Select.Option value="3">Orden 3</Select.Option>
+                                                {
+                                                    OrdenesEstadisticas.data?.map((item, index) => (
+                                                        <Select.Option key={index} value={item.id_Orden_Estadistica}>{item.nombre}</Select.Option>
+                                                    ))
+                                                }
                                             </Select>
                                         </Form.Item>
                                     </div>
@@ -114,25 +176,24 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                                         </p>
                                         <Form.Item name="proveedor" rules={[{ required: true, message: 'Por favor ingrese el proveedor' }]} className='mb-0'>
                                             <Select placeholder="Proveedor" >
-                                                <Select.Option value="1">Proveedor 1</Select.Option>
-                                                <Select.Option value="2">Proveedor 2</Select.Option>
-                                                <Select.Option value="3">Proveedor 3</Select.Option>
+                                                {
+                                                    Providers.data?.map((item, index) => (
+                                                        <Select.Option key={index} value={item.iD_Proveedores}>{item.razon_Social}</Select.Option>
+                                                    ))
+                                                }
                                             </Select>
                                         </Form.Item>
                                     </div>
-                                    <div className='grid grid-cols-2 w-full items-center'>
+                                    {/* <div className='grid grid-cols-2 w-full items-center'>
                                         <p>
                                             Archivo Principal
                                         </p>
                                         <Form.Item name="archivo" rules={[{ required: true, message: 'Por favor ingrese el archivo' }]} className='mb-0'>
-                                            <Dragger>
-                                                <p className="ant-upload-drag-icon">
-                                                    <InboxOutlined size={10} />
-                                                </p>
-                                            </Dragger>
+
+                                            <Input type='file' onChange={changeFileToByteArray} />
                                         </Form.Item>
-                                    </div>
-                                    <div className='grid grid-cols-2 w-full items-center'>
+                                    </div> */}
+                                    {/* <div className='grid grid-cols-2 w-full items-center'>
                                         <p>
                                             Otros Archivos
                                         </p>
@@ -143,7 +204,7 @@ function Modalidad({ Form, nextStep, setModalidadState, modalidadState, tipoSoli
                                                 </p>
                                             </Dragger>
                                         </Form.Item>
-                                    </div>
+                                    </div> */}
                                 </>
                             }
 

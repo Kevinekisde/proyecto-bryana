@@ -5,17 +5,18 @@ import Solicitud from './solicitud'
 import BackButton from '../Template/Backbutton'
 import Request from '../../service/Request'
 import useAuthContext from '../../hooks/useAuthContext'
+import Confirmacion from './Confirmacion'
+import RequestOC from '../../service/RequestOc'
 
 function Create() {
     const { user } = useAuthContext()
-
-    console.log(user)
     const [form] = Form.useForm()
     const [step, setStep] = useState(0)
     const [data, setData] = useState(null)
     const [modalidadState, setModalidadState] = useState(null)
     const [tipoSolicitud, setTipoSolicitud] = useState(null)
     const [loadingForm, setLoadingForm] = useState(false)
+    const [succesfullData, setSuccesfullData] = useState(null)
 
     const nextStep = async () => {
         await form.validateFields()
@@ -26,17 +27,51 @@ function Create() {
     const previousStep = () => setStep(step - 1)
 
     const onFinish = async (values) => {
+
         try {
             const values = await form.validateFields()
 
+            console.log(tipoSolicitud)
+            console.log(values)
+
+            if (tipoSolicitud === 1) {
+
+                RequestOC.post({
+                    solped: values.solped ? values.solped : 0,
+                    Id_Proveedor: values.proveedor ? values.proveedor.toString() : 0,
+                    Id_OE: values.ordenEstadistica ? values.ordenEstadistica.toString() : 0,
+                    Estado: 'Cotizacion en espera',
+                    Id_Usuario: user.id_Usuario.toString(),
+                    Detalle: values.detalle ? values.detalle : '',
+                })
+                    .then(response => {
+                        if (response.iD_Ticket) {
+                            setStep(step + 1)
+                            setSuccesfullData(response)
+                            form.resetFields()
+                        }
+                    })
+            }
+
             //Creacion Cotizacion sin solped
-            Request.post({
-                Id_Solicitante: user.id_Usuario.toString(),
-                Fecha_Creacion_Cotizacion: new Date(),
-                ID_Bien_Servicio: values.bienServicio.toString(),
-                Estado: 'Cotizacion Recibida',
-                Detalle: values.detalle,
-            })
+            if (tipoSolicitud === 2) {
+                Request.post({
+                    Id_Solicitante: user.id_Usuario.toString(),
+                    Fecha_Creacion_Cotizacion: new Date(),
+                    ID_Bien_Servicio: values.bienServicio ? values.bienServicio.toString() : null,
+                    Estado: 'Cotizacion Recibida',
+                    Detalle: values.detalle ? values.detalle : '',
+                    solped: values.solped ? values.solped : 0,
+                })
+                    .then(response => {
+                        if (response.iD_Cotizacion) {
+                            setStep(step + 1)
+                            setSuccesfullData(response)
+                            form.resetFields()
+                        }
+                    })
+            }
+
 
         } catch (error) {
             console.log(error)
@@ -79,6 +114,10 @@ function Create() {
                     {
                         step === 1 &&
                         <Modalidad {...stepProps} />
+                    }
+                    {
+                        step === 2 &&
+                        <Confirmacion data={succesfullData} />
                     }
                 </Form>
 

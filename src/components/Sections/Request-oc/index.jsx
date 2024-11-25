@@ -49,7 +49,8 @@ function RequestOC() {
                 return record.solped == 0 ? 'Sin Solped' : record.solped
             }
         },
-        { title: 'Nº OC', dataIndex: 'id_OE', key: 'id_OE', align: 'center' }, // Falta Numero de id
+        { title: 'Ordenes estadisticas', dataIndex: 'id_OE', key: 'id_OE', align: 'center' }, // Falta Numero de id
+        { title: 'Nº OC', dataIndex: 'numero_OC', key: 'oc', align: 'center' },
         { title: 'Proveedor', dataIndex: 'iD_Proveedor', key: 'iD_Proveedor', align: 'center' }, // Falta Numero de id
         { title: 'Detalle', dataIndex: 'detalle', key: 'detail', align: 'center' },
         {
